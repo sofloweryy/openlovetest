@@ -597,7 +597,7 @@ button.submit-btn:active { transform: scale(0.98); }
       <input type="text" id="userNoteInput" placeholder="请输入你想说的话或联系方式...">
     </div>
 
-    <!-- 按钮文案已改回 -->
+    <!-- 按钮文案 -->
     <button class="close-btn" onclick="hideQRCode()">马上去，我倒是要看看</button>
   </div>
 </div>
@@ -722,20 +722,16 @@ button.submit-btn:active { transform: scale(0.98); }
     document.getElementById('qrModal').style.display = 'flex';
   }
 
-  // 关闭弹窗并自动把留言/联系方式更新至数据库
+  // 关闭弹窗并加了 await 确保异步请求发出去后再关闭
   async function hideQRCode() {
     const userNote = document.getElementById('userNoteInput').value.trim();
     
-    // 隐藏弹窗
-    document.getElementById('qrModal').style.display = 'none';
-
     if (currentRecordId) {
       try {
-        const updateData = { clicked_surprise: true };
-        // 如果用户在输入框写了内容，且你的数据库有 user_note 列，则同步更新
-        if (userNote) {
-          updateData.user_note = userNote; 
-        }
+        const updateData = { 
+          clicked_surprise: true,
+          user_note: userNote || null 
+        };
 
         const { error } = await supabaseClient
           .from('openlovetest')
@@ -743,14 +739,17 @@ button.submit-btn:active { transform: scale(0.98); }
           .eq('id', currentRecordId);
 
         if (error) {
-          console.error('更新惊喜点击与留言状态失败：', error.message);
+          console.error('更新失败，可能是 Supabase RLS 策略拦截：', error.message);
         } else {
-          console.log('成功记录：用户点击惊喜并提交了留言！', userNote);
+          console.log('成功记录：惊喜点击及留言已写入数据库！');
         }
       } catch (err) {
         console.error('网络异常：', err);
       }
     }
+
+    // 隐藏弹窗
+    document.getElementById('qrModal').style.display = 'none';
   }
 
   async function calculateMatch() {
@@ -827,7 +826,7 @@ button.submit-btn:active { transform: scale(0.98); }
 
   function resetQuiz() {
     currentRecordId = null; 
-    document.getElementById('userNoteInput').value = ''; // 重置留言输入框
+    document.getElementById('userNoteInput').value = ''; 
     document.getElementById('quizSection').style.display = 'block';
     document.getElementById('result').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
