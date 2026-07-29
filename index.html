@@ -548,7 +548,8 @@ button.submit-btn:active { transform: scale(0.98); }
             <div class="brand-name">星座与MBTI·双重伴侣配对测算 🔮</div>
             <div class="footer-sub">纯属娱乐，如不雷同概不负责(嘿嘿😁</div>
           </div>
-          <button class="contact-btn" onclick="showQRCode()">💬 联系作者</button>
+          <!-- 修改后的按钮文案 -->
+          <button class="contact-btn" onclick="showQRCode()">💬 此处有惊喜</button>
         </div>
 
         <div class="action-row">
@@ -564,7 +565,8 @@ button.submit-btn:active { transform: scale(0.98); }
     <h3>💬 联系美丽且智慧的开发者</h3>
     <p>长按或点击下方复制微信号</p>
     <div class="wechat-box">vildbloom</div>
-    <button class="close-btn" onclick="hideQRCode()">好的收到！</button>
+    <!-- 修改后的弹窗按钮文案 -->
+    <button class="close-btn" onclick="hideQRCode()">马上去，我倒是要看看</button>
   </div>
 </div>
 
@@ -706,8 +708,16 @@ button.submit-btn:active { transform: scale(0.98); }
     const randomScore = (Math.random() * (99.8 - 93.2) + 93.2).toFixed(1);
     const randomSubText = scoreSubPool[Math.floor(Math.random() * scoreSubPool.length)];
 
-    const targetTypeStr = `${mbtiObj.type} × ${zodiacObj.trait}`;
-    const fullResultString = `${targetTypeStr} (${randomScore}%)`;
+    // 1. 测试得到的 mbti + 星座（独立一列）
+    const targetTypeStr = `${mbtiObj.type} × ${zodiacObj.trait} (${randomScore}%)`;
+
+    // 2. 四个详细结论分析（独立一列）
+    const fourConclusions = `
+【另一半画像】${mbtiObj.baseDesc}
+【灵魂默契】${zodiacObj.merit}
+【避坑指南】${zodiacObj.pitfall}
+【升温建议】${zodiacObj.suggestion}
+    `.trim();
 
     // 后台异步写入 Supabase
     (async () => {
@@ -719,8 +729,8 @@ button.submit-btn:active { transform: scale(0.98); }
               nickname: userName, 
               mbti: mbti, 
               constellation: zodiac,
-              target_type: targetTypeStr, // 测试得到的 mbti+星座 独立成一列
-              combined_result: fullResultString 
+              target_type: targetTypeStr,         // 👈 存入：mbti+星座
+              combined_result: fourConclusions    // 👈 存入：4个结论分析
             }
           ]);
           
