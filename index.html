@@ -570,14 +570,13 @@ button.submit-btn:active { transform: scale(0.98); }
 
 <script>
   // ----------------------------------------------------
-  // 1. 请在这里填入你从 Supabase 后台复制的真实配置
+  // 已填入你的真实 Supabase 配置
   // ----------------------------------------------------
-  const SUPABASE_URL = 'https://你的项目ID.supabase.co'; 
-  const SUPABASE_ANON_KEY = '你的真实anon_key密钥字符串';
+  const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
   
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // 2. 先把字典数据定义在前面，避免“未初始化”报错
   const scoreSubPool = [
     "💞 灵魂契合指数 · 命中注定的双向奔赴",
     "💞 命定羁绊指数 · 走过千山万水终于等到你",
@@ -688,7 +687,6 @@ button.submit-btn:active { transform: scale(0.98); }
   function showQRCode() { document.getElementById('qrModal').style.display = 'flex'; }
   function hideQRCode() { document.getElementById('qrModal').style.display = 'none'; }
 
-  // 3. 计算并展示结果（带有 Supabase 异步静默写入）
   function calculateMatch() {
     const userName = document.getElementById('userNameInput').value.trim();
     const mbti = document.getElementById('mbti').value;
@@ -729,7 +727,7 @@ button.submit-btn:active { transform: scale(0.98); }
           ]);
           
         if (error) {
-          console.error('Supabase 写入失败（请检查 RLS 策略是否开启）：', error.message);
+          console.error('Supabase 写入失败：', error.message);
         } else {
           console.log('数据成功写入 Supabase！', data);
         }
@@ -738,7 +736,6 @@ button.submit-btn:active { transform: scale(0.98); }
       }
     })();
 
-    // 渲染结果并跳转页面
     document.getElementById('displayName').innerText = userName;
     document.getElementById('userAttr').innerText = `${mbti} × ${zodiac}`;
     document.getElementById('targetType').innerText = targetTypeStr;
