@@ -569,9 +569,6 @@ button.submit-btn:active { transform: scale(0.98); }
 </div>
 
 <script>
-  // ----------------------------------------------------
-  // 已清理所有特殊空格，确保为纯净 ASCII 字符串
-  // ----------------------------------------------------
   const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co'; 
   const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
   
@@ -722,6 +719,7 @@ button.submit-btn:active { transform: scale(0.98); }
               nickname: userName, 
               mbti: mbti, 
               constellation: zodiac,
+              target_type: targetTypeStr, // 测试得到的 mbti+星座 独立成一列
               combined_result: fullResultString 
             }
           ]);
