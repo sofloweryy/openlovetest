@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>💖 测测命中另一半的星座与MBTI</title>
+<!-- 引入 Supabase 官方 SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --primary-gradient: linear-gradient(135deg, #ff758f 0%, #ff4d6d 100%);
@@ -567,6 +569,12 @@ button.submit-btn:active { transform: scale(0.98); }
 </div>
 
 <script>
+  // 1. 初始化 Supabase 客户端（请把下面两项换成你自己的项目配置）
+  const SUPABASE_URL = '你的Supabase项目URL'; 
+  const SUPABASE_ANON_KEY = '你的Supabase的anon_key密钥';
+  
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   const scoreSubPool = [
     "💞 灵魂契合指数 · 命中注定的双向奔赴",
     "💞 命定羁绊指数 · 走过千山万水终于等到你",
@@ -677,7 +685,8 @@ button.submit-btn:active { transform: scale(0.98); }
   function showQRCode() { document.getElementById('qrModal').style.display = 'flex'; }
   function hideQRCode() { document.getElementById('qrModal').style.display = 'none'; }
 
-  function calculateMatch() {
+  // 2. 改为 async 函数，以便调用 Supabase 异步写入
+  async function calculateMatch() {
     const userName = document.getElementById('userNameInput').value.trim();
     const mbti = document.getElementById('mbti').value;
     const zodiac = document.getElementById('zodiac').value;
@@ -691,6 +700,27 @@ button.submit-btn:active { transform: scale(0.98); }
       let answered = false;
       for (let r of radios) { if (r.checked) { answered = true; break; } }
       if (!answered) { alert(`还有未完成的题目哦！请检查第 ${i} 题。`); return; }
+    }
+
+    // 💡 核心新增：将测试数据异步写入 Supabase 数据库
+    try {
+      const { data, error } = await supabaseClient
+        .from('openlovetest')
+        .insert([
+          { 
+            nickname: userName, 
+            mbti: mbti, 
+            constellation: zodiac 
+          }
+        ]);
+        
+      if (error) {
+        console.error('写入 Supabase 失败：', error.message);
+      } else {
+        console.log('数据成功写入 Supabase！', data);
+      }
+    } catch (err) {
+      console.error('网络或请求异常：', err);
     }
 
     const mbtiObj = mbtiTargetMap[mbti] || mbtiTargetMap['ESTP'];
