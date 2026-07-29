@@ -569,12 +569,15 @@ button.submit-btn:active { transform: scale(0.98); }
 </div>
 
 <script>
-  // 1. 初始化 Supabase 客户端（替换成你的真实配置）
-  const SUPABASE_URL = '你的Supabase项目URL'; 
-  const SUPABASE_ANON_KEY = '你的Supabase的anon_key密钥';
+  // ----------------------------------------------------
+  // 1. 请在这里填入你从 Supabase 后台复制的真实配置
+  // ----------------------------------------------------
+  const SUPABASE_URL = 'https://你的项目ID.supabase.co'; 
+  const SUPABASE_ANON_KEY = '你的真实anon_key密钥字符串';
   
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // 2. 先把字典数据定义在前面，避免“未初始化”报错
   const scoreSubPool = [
     "💞 灵魂契合指数 · 命中注定的双向奔赴",
     "💞 命定羁绊指数 · 走过千山万水终于等到你",
@@ -685,8 +688,8 @@ button.submit-btn:active { transform: scale(0.98); }
   function showQRCode() { document.getElementById('qrModal').style.display = 'flex'; }
   function hideQRCode() { document.getElementById('qrModal').style.display = 'none'; }
 
-  // 异步计算并写入 Supabase
-  async function calculateMatch() {
+  // 3. 计算并展示结果（带有 Supabase 异步静默写入）
+  function calculateMatch() {
     const userName = document.getElementById('userNameInput').value.trim();
     const mbti = document.getElementById('mbti').value;
     const zodiac = document.getElementById('zodiac').value;
@@ -711,28 +714,31 @@ button.submit-btn:active { transform: scale(0.98); }
     const targetTypeStr = `${mbtiObj.type} × ${zodiacObj.trait}`;
     const fullResultString = `${targetTypeStr} (${randomScore}%)`;
 
-    // 💡 将数据写入 Supabase 数据库（包括新加的 combined_result 字段）
-    try {
-      const { data, error } = await supabaseClient
-        .from('openlovetest')
-        .insert([
-          { 
-            nickname: userName, 
-            mbti: mbti, 
-            constellation: zodiac,
-            combined_result: fullResultString 
-          }
-        ]);
-        
-      if (error) {
-        console.error('写入 Supabase 失败（请检查是否已关闭 RLS 或配置策略）：', error.message);
-      } else {
-        console.log('数据成功写入 Supabase！', data);
+    // 后台异步写入 Supabase
+    (async () => {
+      try {
+        const { data, error } = await supabaseClient
+          .from('openlovetest')
+          .insert([
+            { 
+              nickname: userName, 
+              mbti: mbti, 
+              constellation: zodiac,
+              combined_result: fullResultString 
+            }
+          ]);
+          
+        if (error) {
+          console.error('Supabase 写入失败（请检查 RLS 策略是否开启）：', error.message);
+        } else {
+          console.log('数据成功写入 Supabase！', data);
+        }
+      } catch (err) {
+        console.error('网络异常：', err);
       }
-    } catch (err) {
-      console.error('网络或请求异常：', err);
-    }
+    })();
 
+    // 渲染结果并跳转页面
     document.getElementById('displayName').innerText = userName;
     document.getElementById('userAttr').innerText = `${mbti} × ${zodiac}`;
     document.getElementById('targetType').innerText = targetTypeStr;
