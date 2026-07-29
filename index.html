@@ -400,37 +400,62 @@ button.submit-btn:active { transform: scale(0.98); }
 
 .qr-card {
   background: #fff;
-  padding: 28px 24px;
+  padding: 24px 20px;
   border-radius: 20px;
   text-align: center;
-  width: 85%;
-  max-width: 310px;
+  width: 90%;
+  max-width: 320px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-.qr-card h3 { font-size: 17px; color: #2b2d42; margin-bottom: 6px; }
-.qr-card p { font-size: 12.5px; color: #8d99ae; margin-bottom: 16px; }
+.qr-card h3 { font-size: 16px; color: #2b2d42; margin-bottom: 4px; }
+.qr-card p { font-size: 12px; color: #8d99ae; margin-bottom: 12px; }
 
 .wechat-box {
   background: #fff0f3;
   border: 1.5px dashed #ff4d6d;
   color: #ff4d6d;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 900;
-  padding: 12px;
+  padding: 10px;
   border-radius: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   user-select: all;
+}
+
+/* 弹窗输入框样式 */
+.modal-input-group {
+  text-align: left;
+  margin-bottom: 14px;
+}
+
+.modal-input-group label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4a4e69;
+  margin-bottom: 6px;
+}
+
+.modal-input-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--accent-bg);
+  font-size: 13.5px;
+  color: var(--text-main);
+  outline: none;
 }
 
 .close-btn {
   background: var(--primary-gradient);
   color: #fff;
   border: none;
-  padding: 13px 24px;
+  padding: 12px 20px;
   border-radius: 14px;
   font-weight: bold;
-  font-size: 14.5px;
+  font-size: 14px;
   cursor: pointer;
   width: 100%;
   box-shadow: 0 5px 15px rgba(255, 77, 109, 0.35);
@@ -450,6 +475,7 @@ button.submit-btn:active { transform: scale(0.98); }
   <div id="contentView">
     <div class="quiz-card" id="quizSection">
       <h1>💖 测测命中另一半的星座与MBTI</h1>
+      <!-- 已删掉 (公开畅玩版) -->
       <p class="subtitle">全息星盘与人格交叉矩阵测算</p>
 
       <div class="form-group">
@@ -548,7 +574,6 @@ button.submit-btn:active { transform: scale(0.98); }
             <div class="brand-name">星座与MBTI·双重伴侣配对测算 🔮</div>
             <div class="footer-sub">纯属娱乐，如不雷同概不负责(嘿嘿😁</div>
           </div>
-          <!-- 修改后的按钮文案 -->
           <button class="contact-btn" onclick="showQRCode()">💬 此处有惊喜</button>
         </div>
 
@@ -560,13 +585,20 @@ button.submit-btn:active { transform: scale(0.98); }
   </div>
 </div>
 
+<!-- 弹窗：新增输入项 -->
 <div class="qr-modal" id="qrModal">
   <div class="qr-card">
     <h3>💬 联系美丽且智慧的开发者</h3>
-    <p>长按或点击下方复制微信号</p>
+    <p>长按或复制下方微信号添加</p>
     <div class="wechat-box">vildbloom</div>
-    <!-- 修改后的弹窗按钮文案 -->
-    <button class="close-btn" onclick="hideQRCode()">马上去，我倒是要看看</button>
+    
+    <!-- 新增的输入项 -->
+    <div class="modal-input-group">
+      <label>其他想说的/留下你的微信/手机号：</label>
+      <input type="text" id="userNoteInput" placeholder="请输入你想说的话或联系方式...">
+    </div>
+
+    <button class="close-btn" onclick="hideQRCode()">提交并关闭</button>
   </div>
 </div>
 
@@ -575,6 +607,8 @@ button.submit-btn:active { transform: scale(0.98); }
   const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
   
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let currentRecordId = null;
 
   const scoreSubPool = [
     "💞 灵魂契合指数 · 命中注定的双向奔赴",
@@ -683,10 +717,43 @@ button.submit-btn:active { transform: scale(0.98); }
     }
   };
 
-  function showQRCode() { document.getElementById('qrModal').style.display = 'flex'; }
-  function hideQRCode() { document.getElementById('qrModal').style.display = 'none'; }
+  // 点击「此处有惊喜」时触发：弹出二维码
+  function showQRCode() {
+    document.getElementById('qrModal').style.display = 'flex';
+  }
 
-  function calculateMatch() {
+  // 关闭弹窗并自动把留言/联系方式更新至数据库
+  async function hideQRCode() {
+    const userNote = document.getElementById('userNoteInput').value.trim();
+    
+    // 隐藏弹窗
+    document.getElementById('qrModal').style.display = 'none';
+
+    if (currentRecordId) {
+      try {
+        const updateData = { clicked_surprise: true };
+        // 如果用户在输入框写了内容，且你的数据库有 user_note 列，则同步更新
+        if (userNote) {
+          updateData.user_note = userNote; 
+        }
+
+        const { error } = await supabaseClient
+          .from('openlovetest')
+          .update(updateData)
+          .eq('id', currentRecordId);
+
+        if (error) {
+          console.error('更新惊喜点击与留言状态失败：', error.message);
+        } else {
+          console.log('成功记录：用户点击惊喜并提交了留言！', userNote);
+        }
+      } catch (err) {
+        console.error('网络异常：', err);
+      }
+    }
+  }
+
+  async function calculateMatch() {
     const userName = document.getElementById('userNameInput').value.trim();
     const mbti = document.getElementById('mbti').value;
     const zodiac = document.getElementById('zodiac').value;
@@ -708,10 +775,8 @@ button.submit-btn:active { transform: scale(0.98); }
     const randomScore = (Math.random() * (99.8 - 93.2) + 93.2).toFixed(1);
     const randomSubText = scoreSubPool[Math.floor(Math.random() * scoreSubPool.length)];
 
-    // 1. 测试得到的 mbti + 星座（独立一列）
     const targetTypeStr = `${mbtiObj.type} × ${zodiacObj.trait} (${randomScore}%)`;
 
-    // 2. 四个详细结论分析（独立一列）
     const fourConclusions = `
 【另一半画像】${mbtiObj.baseDesc}
 【灵魂默契】${zodiacObj.merit}
@@ -719,30 +784,30 @@ button.submit-btn:active { transform: scale(0.98); }
 【升温建议】${zodiacObj.suggestion}
     `.trim();
 
-    // 后台异步写入 Supabase
-    (async () => {
-      try {
-        const { data, error } = await supabaseClient
-          .from('openlovetest')
-          .insert([
-            { 
-              nickname: userName, 
-              mbti: mbti, 
-              constellation: zodiac,
-              target_type: targetTypeStr,         // 👈 存入：mbti+星座
-              combined_result: fourConclusions    // 👈 存入：4个结论分析
-            }
-          ]);
-          
-        if (error) {
-          console.error('Supabase 写入失败：', error.message);
-        } else {
-          console.log('数据成功写入 Supabase！', data);
-        }
-      } catch (err) {
-        console.error('网络异常：', err);
+    try {
+      const { data, error } = await supabaseClient
+        .from('openlovetest')
+        .insert([
+          { 
+            nickname: userName, 
+            mbti: mbti, 
+            constellation: zodiac,
+            target_type: targetTypeStr,         
+            combined_result: fourConclusions,   
+            clicked_surprise: false             
+          }
+        ])
+        .select();
+        
+      if (error) {
+        console.error('Supabase 写入失败：', error.message);
+      } else if (data && data.length > 0) {
+        currentRecordId = data[0].id; 
+        console.log('数据成功写入 Supabase，当前记录ID：', currentRecordId);
       }
-    })();
+    } catch (err) {
+      console.error('网络异常：', err);
+    }
 
     document.getElementById('displayName').innerText = userName;
     document.getElementById('userAttr').innerText = `${mbti} × ${zodiac}`;
@@ -761,6 +826,8 @@ button.submit-btn:active { transform: scale(0.98); }
   }
 
   function resetQuiz() {
+    currentRecordId = null; 
+    document.getElementById('userNoteInput').value = ''; // 重置留言输入框
     document.getElementById('quizSection').style.display = 'block';
     document.getElementById('result').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
