@@ -569,7 +569,7 @@ button.submit-btn:active { transform: scale(0.98); }
 </div>
 
 <script>
-  // 1. 初始化 Supabase 客户端（请把下面两项换成你自己的项目配置）
+  // 1. 初始化 Supabase 客户端（替换成你的真实配置）
   const SUPABASE_URL = '你的Supabase项目URL'; 
   const SUPABASE_ANON_KEY = '你的Supabase的anon_key密钥';
   
@@ -685,7 +685,7 @@ button.submit-btn:active { transform: scale(0.98); }
   function showQRCode() { document.getElementById('qrModal').style.display = 'flex'; }
   function hideQRCode() { document.getElementById('qrModal').style.display = 'none'; }
 
-  // 2. 改为 async 函数，以便调用 Supabase 异步写入
+  // 异步计算并写入 Supabase
   async function calculateMatch() {
     const userName = document.getElementById('userNameInput').value.trim();
     const mbti = document.getElementById('mbti').value;
@@ -702,27 +702,6 @@ button.submit-btn:active { transform: scale(0.98); }
       if (!answered) { alert(`还有未完成的题目哦！请检查第 ${i} 题。`); return; }
     }
 
-    // 💡 核心新增：将测试数据异步写入 Supabase 数据库
-    try {
-      const { data, error } = await supabaseClient
-        .from('openlovetest')
-        .insert([
-          { 
-            nickname: userName, 
-            mbti: mbti, 
-            constellation: zodiac 
-          }
-        ]);
-        
-      if (error) {
-        console.error('写入 Supabase 失败：', error.message);
-      } else {
-        console.log('数据成功写入 Supabase！', data);
-      }
-    } catch (err) {
-      console.error('网络或请求异常：', err);
-    }
-
     const mbtiObj = mbtiTargetMap[mbti] || mbtiTargetMap['ESTP'];
     const zodiacObj = zodiacFlavorMap[zodiac] || zodiacFlavorMap['双鱼座'];
 
@@ -730,6 +709,29 @@ button.submit-btn:active { transform: scale(0.98); }
     const randomSubText = scoreSubPool[Math.floor(Math.random() * scoreSubPool.length)];
 
     const targetTypeStr = `${mbtiObj.type} × ${zodiacObj.trait}`;
+    const fullResultString = `${targetTypeStr} (${randomScore}%)`;
+
+    // 💡 将数据写入 Supabase 数据库（包括新加的 combined_result 字段）
+    try {
+      const { data, error } = await supabaseClient
+        .from('openlovetest')
+        .insert([
+          { 
+            nickname: userName, 
+            mbti: mbti, 
+            constellation: zodiac,
+            combined_result: fullResultString 
+          }
+        ]);
+        
+      if (error) {
+        console.error('写入 Supabase 失败（请检查是否已关闭 RLS 或配置策略）：', error.message);
+      } else {
+        console.log('数据成功写入 Supabase！', data);
+      }
+    } catch (err) {
+      console.error('网络或请求异常：', err);
+    }
 
     document.getElementById('displayName').innerText = userName;
     document.getElementById('userAttr').innerText = `${mbti} × ${zodiac}`;
