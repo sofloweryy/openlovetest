@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <meta name="theme-color" content="#fff8ee">
-  <title>测出适合你的另一半｜也许遇见同频的人</title>
+  <title>匹配适合你的另一半｜也许遇见同频的人</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
   <style>
@@ -37,6 +37,7 @@
     .result-hero{transform:none;background:linear-gradient(145deg,#fff5f9,#f4f2ff 55%,#edf9f4);border:0;box-shadow:none}.score-wrap{border:0;box-shadow:0 12px 30px rgba(168,111,155,.13)}.insight,.insight:nth-child(even){transform:none;border:0;box-shadow:none;background:#fff4f8}.insight:nth-child(even){background:#f1f8f4}.contact-card{background:linear-gradient(135deg,#292532,#534765);border:0;box-shadow:0 16px 36px rgba(52,45,67,.2);border-radius:22px}.science-note{background:#f7f7fb;border:0}.poster-preview{border:0;box-shadow:0 16px 42px rgba(45,39,62,.16)}.modal-card{background:#fff;border:0;box-shadow:0 30px 80px rgba(38,32,55,.25)}
     .doodle{opacity:.25;filter:none;animation:floatDoodle 8s ease-in-out infinite}.doodle path,.doodle circle{stroke-width:2.5!important}.d2 svg path{fill:#fff0a8}.d1{width:64px;height:64px}.d2{width:54px;height:54px}.d3{width:70px;height:70px}.d4{width:58px;height:58px}
     .save-tip{width:100%;margin-top:10px;text-align:center;font-weight:800;padding:13px;cursor:default;background:#f7f6fa;color:#5d5865}
+    .match-form .field .invalid{border-color:#e85f78;background:#fff5f7;box-shadow:0 0 0 4px rgba(232,95,120,.12)}.match-error{margin:-2px 0 12px;padding:10px 12px;border-radius:11px;background:#fff0f3;color:#b83d5a;font-size:12px;font-weight:750;line-height:1.5}.consent-row.invalid{padding:9px;border-radius:10px;background:#fff0f3;color:#b83d5a}
     .match-card{margin:18px 0;padding:21px;border-radius:22px;background:linear-gradient(145deg,#f3efff,#fff1f6 54%,#edf9f4);border:1px solid #eee7f3;text-align:center;position:relative;overflow:hidden}.match-card:after{content:"♡";position:absolute;right:15px;top:-13px;font-size:74px;color:rgba(223,89,132,.09);transform:rotate(12deg)}.match-card .match-kicker{font-size:11px;letter-spacing:1.5px;color:#9a7892;font-weight:850}.match-card h3{font-size:20px;margin:6px 0 8px}.match-card p{font-size:13px;line-height:1.7;color:#6f6875;margin:0 0 14px}.match-card .privacy-line{display:block;margin-top:9px;color:#8c8592;font-size:11px}.match-form{text-align:left}.match-form .summary{background:#f7f5fb;border-radius:15px;padding:12px 13px;margin:0 0 15px;font-size:12px;line-height:1.7;color:#625c69}.match-form .summary strong{color:#d65582}.match-form .field{margin-bottom:12px}.match-form .field label{font-size:13px}.match-form .two{gap:9px}.consent-row{display:flex;align-items:flex-start;gap:8px;text-align:left;color:#77717d;font-size:11px;line-height:1.55;margin:5px 0 14px}.consent-row input{margin-top:3px;accent-color:#df5984}.form-tip{font-size:11px;color:#8f8995;text-align:center;line-height:1.5;margin:10px 0 0}.match-success{padding:18px 8px 8px}.match-success .success-icon{font-size:36px}.match-success h3{margin:7px 0}.match-success p{font-size:13px;line-height:1.7;color:#6e6874}
     @media(max-width:480px){body{padding:8px 8px 18px;overflow-x:hidden}.shell{width:100%;min-height:calc(100svh - 26px);display:flex;flex-direction:column}.card{padding:20px 16px;border-radius:23px;max-width:100%;overflow:hidden}#app:has(#quiz:not(.hidden)){min-height:calc(100svh - 108px)}#quiz:not(.hidden){min-height:calc(100svh - 150px);display:flex;flex-direction:column}#quiz .nav{margin-top:auto}h1{font-size:30px;line-height:1.18;letter-spacing:-1px}.gradient{display:inline;overflow-wrap:anywhere}.topline{gap:4px;flex-wrap:wrap}.topline span{padding:5px 7px;font-size:10px}.two{grid-template-columns:1fr}.question{padding-top:18px}.question h2{font-size:20px}.answer{padding:13px 12px}.nav{grid-template-columns:86px minmax(0,1fr)}.proof{gap:3px}.meter b{font-size:9px}.sharebox{grid-template-columns:1fr}.footer{margin-top:auto;padding-top:14px}.modal{padding:10px}.modal-card{width:100%;padding:14px;max-height:96vh}.doodle{display:none}}
   </style>
@@ -51,7 +52,7 @@
   <div id="loading" class="card loading">正在打开你的专属测试…</div>
   <section id="app" class="card hidden">
     <div id="intro">
-      <h1>测出<br><span class="gradient">适合你的另一半</span></h1>
+      <h1>匹配<br><span class="gradient">适合你的另一半</span></h1>
       <p class="lead">15 个恋爱小情境，看见你真正需要怎样的关系。测完还可以加入同频匹配，也许合适的人刚好也在这里。</p>
       <div class="trust"><b>稳定投入</b><b>情绪回应</b><b>自主边界</b><b>坦诚沟通</b><b>共同成长</b></div>
       <div class="field"><label for="userNameInput">你的昵称</label><input id="userNameInput" maxlength="16" placeholder="怎么称呼你？"></div>
@@ -72,13 +73,13 @@
       <div class="proof" id="meters"></div>
       <div id="insights"></div>
       <div class="match-card"><div class="match-kicker">PRIVATE MATCHING</div><h3>也许你的同频对象，刚好也测到了这里</h3><p>留下基本信息。如果社群里出现彼此符合的人，我会先分别征求双方意见，再悄悄帮你们牵线。</p><button class="primary" id="matchBtn">加入同频匹配池</button><span class="privacy-line">🔒 你的微信不会展示给其他用户</span></div>
-      <div class="contact-card"><h3>💌 联系美丽又智慧的开发者</h3><p>觉得准或不准，或者交流，都欢迎。</p><button id="contactBtn">复制微信：zhaihuahua88</button></div>
+      <div class="contact-card"><h3>💌 联系美丽又智慧的开发者</h3><p>欢迎交流一切想法。</p><button id="contactBtn">复制微信：zhaihuahua88</button></div>
       <div class="sharebox"><button class="primary" id="shareBtn">生成我的专属结果海报</button><button class="secondary" id="againBtn">重新测一次</button></div>
     </div>
   </section>
   <p class="footer">关系没有标准答案，结果用于自我观察与轻松分享。</p>
 </main>
-<div class="modal" id="modal"><div class="modal-card"><h3>💬 联系美丽又智慧的开发者</h3><p class="lead">微信号已经替你复制好啦。也可以留一句悄悄话，我会在后台看到。</p><div class="wechat" id="wechat">zhaihuahua88</div><textarea class="note" id="userNote" maxlength="200" placeholder="哪一句很准？或者留下你的微信/想说的话…"></textarea><button class="primary" id="submitNote">留下悄悄话或者联系方式</button><button class="secondary" id="closeModal" style="width:100%;margin-top:9px">我先去加微信</button></div></div>
+<div class="modal" id="modal"><div class="modal-card"><h3>💬 联系美丽又智慧的开发者</h3><div class="wechat" id="wechat">zhaihuahua88</div><textarea class="note" id="userNote" maxlength="200" placeholder="留下你想说的话…"></textarea><button class="primary" id="submitNote">留下悄悄话或者联系方式</button><button class="secondary" id="closeModal" style="width:100%;margin-top:9px">我先去加微信</button></div></div>
 <div class="modal" id="posterModal"><div class="modal-card"><img class="poster-preview" id="posterImage" alt="长按保存专属结果海报"><div class="secondary save-tip">长按上方海报可保存</div></div></div>
 <div class="modal" id="matchModal"><div class="modal-card">
   <div id="matchFormWrap">
@@ -98,9 +99,9 @@
       </div>
       <div class="field"><label for="matchWechat">你的微信</label><input id="matchWechat" maxlength="100" autocomplete="off" placeholder="只供主理人牵线时联系"></div>
       <label class="consent-row"><input type="checkbox" id="matchConsent"><span>我自愿参与匹配，并同意主理人在出现合适人选时通过微信联系我；未经双方同意，不向对方公开联系方式。</span></label>
+      <div class="match-error hidden" id="matchError" role="alert"></div>
       <button class="primary" id="submitMatch">确认加入</button>
       <button class="secondary" id="closeMatch" style="width:100%;margin-top:9px">暂时不了</button>
-      <p class="form-tip">目前免费参与；是否牵线由双方意愿决定。</p>
     </div>
   </div>
   <div class="match-success hidden" id="matchSuccess"><div class="success-icon">💌</div><h3>已经加入匹配池</h3><p>如果遇到彼此符合的人，我会先来问你的意愿。你的微信不会直接展示给其他用户。</p><button class="primary" id="matchDone">知道啦</button></div>
@@ -162,7 +163,7 @@ async function saveAndRender(){const d=resultData;renderResult(d);if(client){try
 function shareText(){return `${resultData.userName} 的恋爱适配类型是「${resultData.archetype}」\n适合的另一半：${resultData.targetType}\n关系适配度：${resultData.scoreNum}%\n\n${resultData.scoreLine}\n测完还可以加入同频匹配：${location.href}`}
 function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
 function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){const chars=[...text];let line='',lines=[];for(const ch of chars){const test=line+ch;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=ch}else line=test}if(line)lines.push(line);lines.slice(0,maxLines).forEach((l,i)=>ctx.fillText(l+(i===maxLines-1&&lines.length>maxLines?'…':''),x,y+i*lineHeight));return Math.min(lines.length,maxLines)*lineHeight}
-async function buildPoster(){const d=resultData,f=figureMatch(d),c=document.createElement('canvas');c.width=1080;c.height=1440;const g=c.getContext('2d');const bg=g.createLinearGradient(0,0,1080,1440);bg.addColorStop(0,'#eadff3');bg.addColorStop(.5,'#f8e6ed');bg.addColorStop(1,'#dff2eb');g.fillStyle=bg;g.fillRect(0,0,1080,1440);g.save();g.shadowColor='rgba(65,45,76,.2)';g.shadowBlur=45;g.shadowOffsetY=20;g.fillStyle='#fffdf9';g.beginPath();g.moveTo(135,72);g.quadraticCurveTo(92,78,90,122);g.lineTo(90,1310);g.quadraticCurveTo(94,1362,146,1368);g.lineTo(930,1368);g.quadraticCurveTo(986,1362,990,1308);g.lineTo(990,126);g.quadraticCurveTo(986,80,938,72);g.closePath();g.fill();g.restore();for(let i=0;i<520;i++){const x=105+(i*73)%870,y=88+(i*137)%1260;g.fillStyle='rgba(104,88,103,.022)';g.fillRect(x,y,1.4,1.4)}g.fillStyle='#eee8f2';g.beginPath();g.moveTo(895,72);g.lineTo(990,72);g.lineTo(990,165);g.quadraticCurveTo(954,111,895,72);g.fill();g.fillStyle='#f1e7e9';g.beginPath();g.moveTo(90,1272);g.lineTo(90,1368);g.lineTo(188,1368);g.quadraticCurveTo(128,1335,90,1272);g.fill();g.textAlign='left';g.fillStyle='#8a7d91';g.font='600 22px sans-serif';g.fillText(d.userName+' 的恋爱答案',150,165);g.fillStyle='#29242e';g.font='800 43px sans-serif';g.fillText('我适合这样的另一半',150,245);g.fillStyle='#d85d86';g.font='900 82px sans-serif';g.fillText('「'+d.archetype+'」',142,365);g.fillStyle='#716977';g.font='600 29px sans-serif';g.fillText(d.targetType+' · '+d.scoreNum+'% 适配',150,430);const topNeeds=Object.entries(d.needs).sort((a,b)=>b[1]-a[1]).slice(0,3);topNeeds.forEach(([k],i)=>{const x=150+i*272;g.fillStyle=['#f9dce7','#e3f1eb','#ece7f7'][i];rounded(g,x,490,238,72,36);g.fillStyle=['#a94768','#4d7566','#66588f'][i];g.textAlign='center';g.font='800 28px sans-serif';g.fillText(d.needLabels[k],x+119,537)});g.textAlign='left';g.fillStyle='#29242e';g.font='800 30px sans-serif';g.fillText('一句话说中我的关系需求',150,675);g.fillStyle='#5f5865';g.font='500 31px sans-serif';wrapCanvasText(g,d.scoreLine,150,735,780,49,3);g.fillStyle='#29242e';g.font='800 25px sans-serif';g.fillText('同款人物彩蛋',150,925);g.fillStyle='#786f7c';g.font='500 22px sans-serif';g.fillText(f.zodiac+'：'+f.zodiacList.slice(0,2).join('、'),150,970);g.fillText(f.mbti+'：'+f.mbtiList.slice(0,2).join('、'),150,1010);g.fillStyle='#f5f1f5';rounded(g,150,1060,780,210,30);g.fillStyle='#29242e';g.font='800 29px sans-serif';g.fillText('你适合怎样的人？',195,1125);g.fillStyle='#7b7480';g.font='500 22px sans-serif';g.fillText('扫码测一测，也许遇见同频的 TA',195,1168);const qr=document.createElement('canvas');if(window.QRCode?.toCanvas){await QRCode.toCanvas(qr,location.origin,{width:170,margin:2,color:{dark:'#29242e',light:'#ffffff'}});g.fillStyle='#fff';rounded(g,720,1080,180,180,18);g.drawImage(qr,725,1085,170,170)}g.fillStyle='#a29aa6';g.font='500 17px sans-serif';g.fillText('人物类型来自网络常见讨论，非官方认证',150,1320);return c.toDataURL('image/png')}
+async function buildPoster(){const d=resultData,f=figureMatch(d),c=document.createElement('canvas');c.width=1080;c.height=1440;const g=c.getContext('2d');const bg=g.createLinearGradient(0,0,1080,1440);bg.addColorStop(0,'#eadff3');bg.addColorStop(.5,'#f8e6ed');bg.addColorStop(1,'#dff2eb');g.fillStyle=bg;g.fillRect(0,0,1080,1440);g.save();g.shadowColor='rgba(65,45,76,.2)';g.shadowBlur=45;g.shadowOffsetY=20;g.fillStyle='#fffdf9';g.beginPath();g.moveTo(135,72);g.quadraticCurveTo(92,78,90,122);g.lineTo(90,1310);g.quadraticCurveTo(94,1362,146,1368);g.lineTo(930,1368);g.quadraticCurveTo(986,1362,990,1308);g.lineTo(990,126);g.quadraticCurveTo(986,80,938,72);g.closePath();g.fill();g.restore();for(let i=0;i<520;i++){const x=105+(i*73)%870,y=88+(i*137)%1260;g.fillStyle='rgba(104,88,103,.022)';g.fillRect(x,y,1.4,1.4)}g.fillStyle='#eee8f2';g.beginPath();g.moveTo(895,72);g.lineTo(990,72);g.lineTo(990,165);g.quadraticCurveTo(954,111,895,72);g.fill();g.fillStyle='#f1e7e9';g.beginPath();g.moveTo(90,1272);g.lineTo(90,1368);g.lineTo(188,1368);g.quadraticCurveTo(128,1335,90,1272);g.fill();g.textAlign='left';g.fillStyle='#8a7d91';g.font='600 22px sans-serif';g.fillText(d.userName+' 的恋爱答案',150,165);g.fillStyle='#29242e';g.font='800 43px sans-serif';g.fillText('我适合这样的另一半',150,245);g.fillStyle='#d85d86';g.font='900 82px sans-serif';g.fillText('「'+d.archetype+'」',142,365);g.fillStyle='#716977';g.font='600 29px sans-serif';g.fillText(d.targetType+' · '+d.scoreNum+'% 适配',150,430);const topNeeds=Object.entries(d.needs).sort((a,b)=>b[1]-a[1]).slice(0,3);topNeeds.forEach(([k],i)=>{const x=150+i*272;g.fillStyle=['#f9dce7','#e3f1eb','#ece7f7'][i];rounded(g,x,490,238,72,36);g.fillStyle=['#a94768','#4d7566','#66588f'][i];g.textAlign='center';g.font='800 28px sans-serif';g.fillText(d.needLabels[k],x+119,537)});g.textAlign='left';g.fillStyle='#29242e';g.font='800 30px sans-serif';g.fillText('一句话说中我的关系需求',150,675);g.fillStyle='#5f5865';g.font='500 31px sans-serif';wrapCanvasText(g,d.scoreLine,150,735,780,49,3);g.fillStyle='#29242e';g.font='800 25px sans-serif';g.fillText('同款人物彩蛋',150,925);g.fillStyle='#786f7c';g.font='500 22px sans-serif';g.fillText(f.zodiac+'：'+f.zodiacList.slice(0,2).join('、'),150,970);g.fillText(f.mbti+'：'+f.mbtiList.slice(0,2).join('、'),150,1010);g.fillStyle='#f7eef5';rounded(g,150,1060,780,210,30);g.fillStyle='#d55380';g.font='800 20px sans-serif';g.fillText('同频匹配已开启',195,1105);g.fillStyle='#29242e';g.font='800 29px sans-serif';g.fillText('测完还能参与同频匹配',195,1150);g.fillStyle='#7b7480';g.font='500 21px sans-serif';g.fillText('扫码看看，谁与你双向适配',195,1192);const qr=document.createElement('canvas');if(window.QRCode?.toCanvas){await QRCode.toCanvas(qr,location.origin,{width:170,margin:2,color:{dark:'#29242e',light:'#ffffff'}});g.fillStyle='#fff';rounded(g,720,1080,180,180,18);g.drawImage(qr,725,1085,170,170)}g.fillStyle='#a29aa6';g.font='500 17px sans-serif';g.fillText('人物类型来自网络常见讨论，非官方认证',150,1320);return c.toDataURL('image/png')}
 async function guaranteeQr(posterUrl){const [poster,qr]=await Promise.all([loadImage(posterUrl),loadImage(QR_DATA)]);const c=document.createElement('canvas');c.width=1080;c.height=1440;const g=c.getContext('2d');g.drawImage(poster,0,0);g.fillStyle='#fff';g.beginPath();g.roundRect(720,1080,180,180,18);g.fill();g.drawImage(qr,725,1085,170,170);return c.toDataURL('image/png')}
 $('#shareBtn').onclick=async()=>{$('#shareBtn').textContent='正在生成海报…';try{const url=await guaranteeQr(await buildPoster());$('#posterImage').src=url;$('#posterModal').classList.add('open')}finally{$('#shareBtn').textContent='生成我的专属结果海报'}};$('#posterModal').onclick=e=>{if(e.target.id==='posterModal')e.currentTarget.classList.remove('open')};
 $('#againBtn').onclick=()=>{answers.fill(null);index=0;resultData=null;$('#result').classList.add('hidden');$('#intro').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'})};
@@ -172,16 +173,30 @@ function openMatchModal(){
   const [wantedMbti,wantedZodiac]=resultData.targetType.split(/\s*×\s*/);
   $('#matchNickname').value=resultData.userName||'';
   $('#matchSummary').innerHTML=`你的类型：<strong>${esc($('#mbti').value)} × ${esc($('#zodiac').value)}</strong><br>测试推荐：<strong>${esc(wantedMbti)} × ${esc(wantedZodiac)}</strong>`;
-  $('#matchFormWrap').classList.remove('hidden');$('#matchSuccess').classList.add('hidden');$('#matchModal').classList.add('open');
+  clearMatchError();$('#matchFormWrap').classList.remove('hidden');$('#matchSuccess').classList.add('hidden');$('#matchModal').classList.add('open');
 }
 $('#matchBtn').onclick=openMatchModal;
 $('#closeMatch').onclick=()=>$('#matchModal').classList.remove('open');
 $('#matchDone').onclick=()=>$('#matchModal').classList.remove('open');
 $('#matchModal').onclick=e=>{if(e.target.id==='matchModal')e.currentTarget.classList.remove('open')};
+const matchRequired=[['#matchNickname','称呼'],['#matchGender','你的性别'],['#matchPreferredGender','想认识的人'],['#matchAge','年龄段'],['#matchCity','所在城市'],['#matchWechat','微信']];
+function clearMatchError(){
+  $('#matchError').classList.add('hidden');
+  matchRequired.forEach(([selector])=>$(selector).classList.remove('invalid'));
+  document.querySelector('.consent-row').classList.remove('invalid');
+}
+matchRequired.forEach(([selector])=>{const el=$(selector);el.addEventListener('input',clearMatchError);el.addEventListener('change',clearMatchError)});
+$('#matchConsent').addEventListener('change',clearMatchError);
 $('#submitMatch').onclick=async()=>{
   const nickname=$('#matchNickname').value.trim(),gender=$('#matchGender').value,preferredGender=$('#matchPreferredGender').value,age=$('#matchAge').value,city=$('#matchCity').value.trim(),wechat=$('#matchWechat').value.trim();
-  if(!nickname||!gender||!preferredGender||!age||!city||!wechat){toast('请把必填信息补充完整');return}
-  if(!$('#matchConsent').checked){toast('请先确认隐私与匹配说明');return}
+  clearMatchError();
+  const missing=matchRequired.filter(([selector])=>!$(selector).value.trim());
+  if(missing.length){
+    missing.forEach(([selector])=>$(selector).classList.add('invalid'));
+    const error=$('#matchError');error.textContent='还差：'+missing.map(([,label])=>label).join('、');error.classList.remove('hidden');
+    missing[0][0]&&$(missing[0][0]).focus();error.scrollIntoView({behavior:'smooth',block:'center'});return
+  }
+  if(!$('#matchConsent').checked){const error=$('#matchError');error.textContent='请先勾选匹配与隐私说明';error.classList.remove('hidden');document.querySelector('.consent-row').classList.add('invalid');error.scrollIntoView({behavior:'smooth',block:'center'});return}
   if(!client){toast('网络连接失败，请稍后再试');return}
   const [desiredMbti,desiredZodiac]=resultData.targetType.split(/\s*×\s*/);
   const button=$('#submitMatch');button.disabled=true;button.textContent='正在加入…';
