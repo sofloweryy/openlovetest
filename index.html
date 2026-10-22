@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <meta name="theme-color" content="#fff8ee">
-  <title>匹配适合你的另一半｜也许遇见同频的人</title>
+  <title>谁才是适合你的另一半｜同频匹配</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
   <style>
@@ -48,28 +48,28 @@
 <div class="doodle d3" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M13 49c15-30 39-35 54-15M20 59c16-22 32-25 45-13" fill="none" stroke="#72cdbd" stroke-width="4" stroke-linecap="round"/><circle cx="13" cy="49" r="4" fill="#72cdbd"/></svg></div>
 <div class="doodle d4" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M19 24c8-10 24-9 28 3 13-4 22 5 17 16-5 12-25 18-36 15-14-4-19-22-9-34Z" fill="none" stroke="#9a86df" stroke-width="4" stroke-dasharray="5 5" stroke-linecap="round"/></svg></div>
 <main class="shell">
-  <div class="topline"><span>💗 15 个真实情境</span><span>⏱ 约 3 分钟</span><span>✨ 可加入同频匹配</span></div>
-  <div id="loading" class="card loading">正在打开你的专属测试…</div>
+  <div class="topline"><span>💗 15 个心动瞬间</span><span>⏱ 3 分钟出结果</span><span>✨ 测完还能匹配同频 TA</span></div>
+  <div id="loading" class="card loading">正在加载你的心动答案…</div>
   <section id="app" class="card hidden">
     <div id="intro">
-      <h1>匹配<br><span class="gradient">适合你的另一半</span></h1>
-      <p class="lead">15 个恋爱小情境，看见你真正需要怎样的关系。测完还可以加入同频匹配，也许合适的人刚好也在这里。</p>
-      <div class="trust"><b>稳定投入</b><b>情绪回应</b><b>自主边界</b><b>坦诚沟通</b><b>共同成长</b></div>
-      <div class="field"><label for="userNameInput">你的昵称</label><input id="userNameInput" maxlength="16" placeholder="怎么称呼你？"></div>
+      <h1>测测谁才是<br><span class="gradient">适合你的另一半</span></h1>
+      <p class="lead">不用想标准答案，跟着感觉选。看看什么样的人最懂你，也最适合陪你走下去。</p>
+      <div class="trust"><b>会好好爱你</b><b>懂你小情绪</b><b>给足自由感</b><b>有话不憋着</b><b>陪你一起变好</b></div>
+      <div class="field"><label for="userNameInput">先留个昵称吧</label><input id="userNameInput" maxlength="16" placeholder="怎么称呼你？"></div>
       <div class="two">
         <div class="field"><label for="mbti">你的 MBTI</label><select id="mbti"><option value="">请选择</option></select></div>
-        <div class="field"><label for="zodiac">你的太阳星座</label><select id="zodiac"><option value="">请选择</option></select></div>
+        <div class="field"><label for="zodiac">你的星座</label><select id="zodiac"><option value="">请选择</option></select></div>
       </div>
-      <button class="primary" id="startBtn">开始测试，看看谁适合我 →</button>
-      <p class="science-note">凭第一感觉选，结果仅供娱乐与自我观察。</p>
+      <button class="primary" id="startBtn">看看谁和我最来电 →</button>
+      <p class="science-note">跟着感觉选就好，没有标准答案。</p>
     </div>
     <div id="quiz" class="hidden">
       <div class="quiz-head"><div class="progress-row"><span id="dimension">相处节奏</span><span id="counter">1 / 15</span></div><div class="progress"><i id="bar"></i></div></div>
-      <div class="question"><div class="kicker" id="kicker">凭第一感觉选，不用想太久</div><h2 id="questionText"></h2><div class="answers" id="answers"></div><div id="quizError" class="error hidden">先选一个最像你的答案吧</div></div>
+      <div class="question"><div class="kicker" id="kicker">别想太久，选你的第一反应 👀</div><h2 id="questionText"></h2><div class="answers" id="answers"></div><div id="quizError" class="error hidden">选一个最像你的吧～</div></div>
       <div class="nav"><button class="secondary" id="prevBtn">上一步</button><button class="primary" id="nextBtn">下一题</button></div>
     </div>
     <div id="result" class="hidden">
-      <div class="result-hero"><div class="eyebrow"><span id="displayName"></span> 的恋爱适配画像</div><h2>适合你的另一半</h2><div class="target" id="targetType"></div><div class="type-pill" id="archetype"></div><div class="score-wrap" id="scoreRing"><div class="score"><strong id="scoreNum"></strong><small>关系适配度</small></div></div><p class="lead" id="scoreLine"></p></div>
+      <div class="result-hero"><div class="eyebrow"><span id="displayName"></span> 的心动答案</div><h2>最适合你的 TA</h2><div class="target" id="targetType"></div><div class="type-pill" id="archetype"></div><div class="score-wrap" id="scoreRing"><div class="score"><strong id="scoreNum"></strong><small>心动适配度</small></div></div><p class="lead" id="scoreLine"></p></div>
       <div class="proof" id="meters"></div>
       <div id="insights"></div>
       <div class="match-card"><div class="match-kicker">PRIVATE MATCHING</div><h3>匹配心动的 TA</h3><button class="primary" id="matchBtn">参与匹配</button></div>
@@ -114,7 +114,7 @@ const QR_DATA='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACAvzb
 function loadImage(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src})}
 const pathParts=location.pathname.split('/').filter(Boolean);const currentCode=pathParts.at(-1)||'';
 const dims=['节奏','共情','边界','表达','长期'];
-const dimNames={节奏:'相处节奏',共情:'情绪支持',边界:'沟通边界',表达:'爱的表达',长期:'长期价值'};
+const dimNames={节奏:'约会日常',共情:'难过的时候',边界:'亲密距离',表达:'心动表达',长期:'未来搭子'};
 const questions=[
 {d:'节奏',q:'理想的周末约会，你更想怎么过？',a:[['提前商量好路线，舒服又高效','稳'],['定个方向，边走边发现惊喜','趣'],['去哪不重要，黏在一起就很好','暖'],['各自充电，晚点再一起吃饭','界']]},
 {d:'共情',q:'你带着坏情绪回家，最希望 TA 的第一反应是？',a:[['先抱抱我，告诉我“我在”','暖'],['听我说完，再帮我理清问题','智'],['拉我出去吃点好的，换换心情','趣'],['问我想独处还是想陪伴','界']]},
@@ -157,7 +157,7 @@ $('#startBtn').onclick=()=>{if(!$('#userNameInput').value.trim()){toast('先写�
 $('#prevBtn').onclick=()=>{if(index===0){$('#quiz').classList.add('hidden');$('#intro').classList.remove('hidden')}else{index--;renderQuestion()}};
 $('#nextBtn').onclick=()=>{if(answers[index]===null){$('#quizError').classList.remove('hidden');return}if(index<14){index++;renderQuestion();scrollTo({top:0,behavior:'smooth'})}else calculate()};
 function calculate(){const counts={稳:0,暖:0,趣:0,界:0,直:0,智:0};questions.forEach((q,i)=>counts[q.a[answers[i]][1]]++);const ranked=Object.entries(counts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));const top=ranked[0][0],second=ranked[1][0],p=profile[top];const seed=answers.reduce((n,x,i)=>n+(x+1)*(i+3),0);const mbti=p.mbti[seed%p.mbti.length],z=p.z[(seed+counts[second])%p.z.length];const score=Math.min(96,82+counts[top]*2+Math.round(counts[second]/2));const needLabels={稳:'安稳',暖:'共情',趣:'新鲜',界:'自由',直:'坦诚',智:'深聊'};const needs=Object.fromEntries(Object.entries(counts).map(([k,v])=>[k,Math.min(96,54+v*10)]));const evidence=questions.map((q,i)=>({q:q.q,a:q.a[answers[i]][0],tag:q.a[answers[i]][1]})).filter(x=>x.tag===top).slice(0,2);const ev=evidence.map(x=>`当题目问“${x.q}”时，你更想要“${x.a}”`).join('；');const copy=richCopy[top];const extra=copy.extra[seed%copy.extra.length],blind=copy.blind[seed%copy.blind.length],act=copy.act[(seed+1)%copy.act.length];resultData={userName:$('#userNameInput').value.trim(),userAttr:`${$('#mbti').value} × ${$('#zodiac').value}`,targetType:`${mbti} × ${z}`,scoreNum:score,archetype:p.name,scoreLine:`能给你${p.name.replace('型','')}的踏实，也有${profile[second].name.replace('型','')}的默契，才更适合与你长久相处。`,needs,needLabels,desc0:`${p.desc}${extra}${bridge[second]}`,desc1:`${ev}。看起来是不同的小事，其实都在说同一句话：你很在意${p.name.replace('型','')}。`,desc2:`${blind}你也很看重“${profile[second].name.replace('型','')}”，所以只满足一种需求，还是会让你觉得差点意思。`,desc3:act};saveAndRender()}
-function renderResult(d){resultData=d;$('#displayName').textContent=d.userName;$('#targetType').textContent=d.targetType;$('#archetype').textContent=`你的适配类型：${d.archetype}`;$('#scoreNum').textContent=d.scoreNum;$('#scoreRing').style.setProperty('--pct',`${d.scoreNum}%`);$('#scoreLine').textContent=d.scoreLine;const order=['稳','暖','界','直','趣','智'];$('#meters').innerHTML=order.map(x=>`<div class="meter"><b>${d.needLabels?.[x]||x}</b><span><i style="height:${d.needs?.[x]||54}%"></i></span><small>${d.needs?.[x]||54}</small></div>`).join('');const f=figureMatch(d);const figureText=`同星座名人：${f.zodiacList.join('、')}。\n${f.mbti}：${f.mbtiList.join('、')}。`;const blocks=[['💗 什么样的人更适合你',d.desc0],['🔎 从你的选择里看出来',d.desc1],['⚠️ 相处时要留意',d.desc2],['✨ 让关系更舒服的小建议',d.desc3],['🎭 你的同款人物彩蛋',figureText]];$('#insights').innerHTML=blocks.map(x=>`<article class="insight"><h3>${x[0]}</h3><p>${esc(x[1])}</p></article>`).join('');$('#intro').classList.add('hidden');$('#quiz').classList.add('hidden');$('#result').classList.remove('hidden');showApp();scrollTo({top:0,behavior:'smooth'})}
+function renderResult(d){resultData=d;$('#displayName').textContent=d.userName;$('#targetType').textContent=d.targetType;$('#archetype').textContent=`你的心动类型：${d.archetype}`;$('#scoreNum').textContent=d.scoreNum;$('#scoreRing').style.setProperty('--pct',`${d.scoreNum}%`);$('#scoreLine').textContent=d.scoreLine;const order=['稳','暖','界','直','趣','智'];$('#meters').innerHTML=order.map(x=>`<div class="meter"><b>${d.needLabels?.[x]||x}</b><span><i style="height:${d.needs?.[x]||54}%"></i></span><small>${d.needs?.[x]||54}</small></div>`).join('');const f=figureMatch(d);const figureText=`同星座名人：${f.zodiacList.join('、')}。\n${f.mbti}：${f.mbtiList.join('、')}。`;const blocks=[['💗 你会被这样的人拿捏',d.desc0],['👀 原来你最在意这些',d.desc1],['⚡ 上头时也别忘了',d.desc2],['✨ 想长久，记住这一点',d.desc3],['🎭 你的理想型同款阵容',figureText]];$('#insights').innerHTML=blocks.map(x=>`<article class="insight"><h3>${x[0]}</h3><p>${esc(x[1])}</p></article>`).join('');$('#intro').classList.add('hidden');$('#quiz').classList.add('hidden');$('#result').classList.remove('hidden');showApp();scrollTo({top:0,behavior:'smooth'})}
 async function saveAndRender(){const d=resultData;renderResult(d);if(client){try{const {data}=await client.from('openlovetest').insert([{nickname:d.userName,mbti:$('#mbti').value,constellation:$('#zodiac').value,target_type:`${d.targetType} (${d.scoreNum}%)`,combined_result:`【关系原型】${d.archetype}\n【核心画像】${d.desc0}\n【结果依据】${d.desc1}\n【关系盲区】${d.desc2}\n【行动建议】${d.desc3}`,clicked_surprise:false}]).select('id');currentRecordId=data?.[0]?.id||null}catch(e){}}}
 function shareText(){return `${resultData.userName} 的恋爱适配类型是「${resultData.archetype}」\n适合的另一半：${resultData.targetType}\n关系适配度：${resultData.scoreNum}%\n\n${resultData.scoreLine}\n测完还可以加入同频匹配：${location.href}`}
 function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
