@@ -37,6 +37,7 @@
     .result-hero{transform:none;background:linear-gradient(145deg,#fff5f9,#f4f2ff 55%,#edf9f4);border:0;box-shadow:none}.score-wrap{border:0;box-shadow:0 12px 30px rgba(168,111,155,.13)}.insight,.insight:nth-child(even){transform:none;border:0;box-shadow:none;background:#fff4f8}.insight:nth-child(even){background:#f1f8f4}.contact-card{background:linear-gradient(135deg,#292532,#534765);border:0;box-shadow:0 16px 36px rgba(52,45,67,.2);border-radius:22px}.science-note{background:#f7f7fb;border:0}.poster-preview{border:0;box-shadow:0 16px 42px rgba(45,39,62,.16)}.modal-card{background:#fff;border:0;box-shadow:0 30px 80px rgba(38,32,55,.25)}
     .doodle{opacity:.25;filter:none;animation:floatDoodle 8s ease-in-out infinite}.doodle path,.doodle circle{stroke-width:2.5!important}.d2 svg path{fill:#fff0a8}.d1{width:64px;height:64px}.d2{width:54px;height:54px}.d3{width:70px;height:70px}.d4{width:58px;height:58px}
     .save-tip{width:100%;margin-top:10px;text-align:center;font-weight:800;padding:13px;cursor:default;background:#f7f6fa;color:#5d5865}
+    .match-card{margin:18px 0;padding:21px;border-radius:22px;background:linear-gradient(145deg,#f3efff,#fff1f6 54%,#edf9f4);border:1px solid #eee7f3;text-align:center;position:relative;overflow:hidden}.match-card:after{content:"♡";position:absolute;right:15px;top:-13px;font-size:74px;color:rgba(223,89,132,.09);transform:rotate(12deg)}.match-card .match-kicker{font-size:11px;letter-spacing:1.5px;color:#9a7892;font-weight:850}.match-card h3{font-size:20px;margin:6px 0 8px}.match-card p{font-size:13px;line-height:1.7;color:#6f6875;margin:0 0 14px}.match-card .privacy-line{display:block;margin-top:9px;color:#8c8592;font-size:11px}.match-form{text-align:left}.match-form .summary{background:#f7f5fb;border-radius:15px;padding:12px 13px;margin:0 0 15px;font-size:12px;line-height:1.7;color:#625c69}.match-form .summary strong{color:#d65582}.match-form .field{margin-bottom:12px}.match-form .field label{font-size:13px}.match-form .two{gap:9px}.consent-row{display:flex;align-items:flex-start;gap:8px;text-align:left;color:#77717d;font-size:11px;line-height:1.55;margin:5px 0 14px}.consent-row input{margin-top:3px;accent-color:#df5984}.form-tip{font-size:11px;color:#8f8995;text-align:center;line-height:1.5;margin:10px 0 0}.match-success{padding:18px 8px 8px}.match-success .success-icon{font-size:36px}.match-success h3{margin:7px 0}.match-success p{font-size:13px;line-height:1.7;color:#6e6874}
     @media(max-width:480px){body{padding:8px 8px 18px;overflow-x:hidden}.shell{width:100%;min-height:calc(100svh - 26px);display:flex;flex-direction:column}.card{padding:20px 16px;border-radius:23px;max-width:100%;overflow:hidden}#app:has(#quiz:not(.hidden)){min-height:calc(100svh - 108px)}#quiz:not(.hidden){min-height:calc(100svh - 150px);display:flex;flex-direction:column}#quiz .nav{margin-top:auto}h1{font-size:30px;line-height:1.18;letter-spacing:-1px}.gradient{display:inline;overflow-wrap:anywhere}.topline{gap:4px;flex-wrap:wrap}.topline span{padding:5px 7px;font-size:10px}.two{grid-template-columns:1fr}.question{padding-top:18px}.question h2{font-size:20px}.answer{padding:13px 12px}.nav{grid-template-columns:86px minmax(0,1fr)}.proof{gap:3px}.meter b{font-size:9px}.sharebox{grid-template-columns:1fr}.footer{margin-top:auto;padding-top:14px}.modal{padding:10px}.modal-card{width:100%;padding:14px;max-height:96vh}.doodle{display:none}}
   </style>
 </head>
@@ -70,6 +71,7 @@
       <div class="result-hero"><div class="eyebrow"><span id="displayName"></span> 的恋爱适配画像</div><h2>适合你的另一半</h2><div class="target" id="targetType"></div><div class="type-pill" id="archetype"></div><div class="score-wrap" id="scoreRing"><div class="score"><strong id="scoreNum"></strong><small>关系适配度</small></div></div><p class="lead" id="scoreLine"></p></div>
       <div class="proof" id="meters"></div>
       <div id="insights"></div>
+      <div class="match-card"><div class="match-kicker">PRIVATE MATCHING</div><h3>也许你的同频对象，刚好也测到了这里</h3><p>留下基本信息。如果社群里出现彼此符合的人，我会先分别征求双方意见，再悄悄帮你们牵线。</p><button class="primary" id="matchBtn">加入同频匹配池</button><span class="privacy-line">🔒 你的微信不会展示给其他用户</span></div>
       <div class="contact-card"><h3>💌 联系美丽又智慧的开发者</h3><p>觉得准或不准，或者交流，都欢迎。</p><button id="contactBtn">复制微信：zhaihuahua88</button></div>
       <div class="sharebox"><button class="primary" id="shareBtn">生成我的专属结果海报</button><button class="secondary" id="againBtn">重新测一次</button></div>
     </div>
@@ -78,6 +80,31 @@
 </main>
 <div class="modal" id="modal"><div class="modal-card"><h3>💬 联系美丽又智慧的开发者</h3><p class="lead">微信号已经替你复制好啦。也可以留一句悄悄话，我会在后台看到。</p><div class="wechat" id="wechat">zhaihuahua88</div><textarea class="note" id="userNote" maxlength="200" placeholder="哪一句很准？或者留下你的微信/想说的话…"></textarea><button class="primary" id="submitNote">留下悄悄话或者联系方式</button><button class="secondary" id="closeModal" style="width:100%;margin-top:9px">我先去加微信</button></div></div>
 <div class="modal" id="posterModal"><div class="modal-card"><img class="poster-preview" id="posterImage" alt="长按保存专属结果海报"><div class="secondary save-tip">长按上方海报可保存</div></div></div>
+<div class="modal" id="matchModal"><div class="modal-card">
+  <div id="matchFormWrap">
+    <h3>💞 加入同频匹配池</h3>
+    <p class="lead">资料只由主理人查看。遇到可能合适的人，我会先问过你，再决定是否牵线。</p>
+    <div class="match-form">
+      <div class="summary" id="matchSummary"></div>
+      <div class="field"><label for="matchNickname">怎么称呼你</label><input id="matchNickname" maxlength="30" placeholder="昵称或社群里的名字"></div>
+      <div class="field"><label for="matchGroup">来自哪个群（选填）</label><input id="matchGroup" maxlength="50" placeholder="例如：摘花花上海群"></div>
+      <div class="two">
+        <div class="field"><label for="matchGender">你的性别</label><select id="matchGender"><option value="">请选择</option><option>女生</option><option>男生</option><option>其他</option><option>不便透露</option></select></div>
+        <div class="field"><label for="matchPreferredGender">想认识</label><select id="matchPreferredGender"><option value="">请选择</option><option>男生</option><option>女生</option><option>不限</option></select></div>
+      </div>
+      <div class="two">
+        <div class="field"><label for="matchAge">年龄段</label><select id="matchAge"><option value="">请选择</option><option>18–22</option><option>23–26</option><option>27–30</option><option>31–35</option><option>36–40</option><option>40+</option></select></div>
+        <div class="field"><label for="matchCity">所在城市</label><input id="matchCity" maxlength="50" placeholder="例如：上海"></div>
+      </div>
+      <div class="field"><label for="matchWechat">你的微信</label><input id="matchWechat" maxlength="100" autocomplete="off" placeholder="只供主理人牵线时联系"></div>
+      <label class="consent-row"><input type="checkbox" id="matchConsent"><span>我自愿参与匹配，并同意主理人在出现合适人选时通过微信联系我；未经双方同意，不向对方公开联系方式。</span></label>
+      <button class="primary" id="submitMatch">确认加入</button>
+      <button class="secondary" id="closeMatch" style="width:100%;margin-top:9px">暂时不了</button>
+      <p class="form-tip">目前免费参与；是否牵线由双方意愿决定。</p>
+    </div>
+  </div>
+  <div class="match-success hidden" id="matchSuccess"><div class="success-icon">💌</div><h3>已经加入匹配池</h3><p>如果遇到彼此符合的人，我会先来问你的意愿。你的微信不会直接展示给其他用户。</p><button class="primary" id="matchDone">知道啦</button></div>
+</div></div>
 <div class="toast" id="toast">已复制</div>
 <script>
 const SB_URL='https://hrgzmwtgpacdxifcevwy.supabase.co';
@@ -140,6 +167,34 @@ async function guaranteeQr(posterUrl){const [poster,qr]=await Promise.all([loadI
 $('#shareBtn').onclick=async()=>{$('#shareBtn').textContent='正在生成海报…';try{const url=await guaranteeQr(await buildPoster());$('#posterImage').src=url;$('#posterModal').classList.add('open')}finally{$('#shareBtn').textContent='生成我的专属结果海报'}};$('#posterModal').onclick=e=>{if(e.target.id==='posterModal')e.currentTarget.classList.remove('open')};
 $('#againBtn').onclick=()=>{answers.fill(null);index=0;resultData=null;$('#result').classList.add('hidden');$('#intro').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'})};
 $('#contactBtn').onclick=async()=>{try{await navigator.clipboard.writeText('zhaihuahua88')}catch(e){}$('#modal').classList.add('open');toast('微信号 zhaihuahua88 已复制')};$('#wechat').onclick=async()=>{try{await navigator.clipboard.writeText('zhaihuahua88');toast('微信号已复制')}catch(e){}};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};$('#submitNote').onclick=async()=>{const note=$('#userNote').value.trim();if(currentRecordId&&client){try{await client.from('openlovetest').update({clicked_surprise:true,user_note:note||null}).eq('id',currentRecordId)}catch(e){}}$('#modal').classList.remove('open');toast(note?'悄悄话收到啦':'微信号已复制')};
+function openMatchModal(){
+  if(!resultData)return;
+  const [wantedMbti,wantedZodiac]=resultData.targetType.split(/\s*×\s*/);
+  $('#matchNickname').value=resultData.userName||'';
+  $('#matchSummary').innerHTML=`你的类型：<strong>${esc($('#mbti').value)} × ${esc($('#zodiac').value)}</strong><br>测试推荐：<strong>${esc(wantedMbti)} × ${esc(wantedZodiac)}</strong>`;
+  $('#matchFormWrap').classList.remove('hidden');$('#matchSuccess').classList.add('hidden');$('#matchModal').classList.add('open');
+}
+$('#matchBtn').onclick=openMatchModal;
+$('#closeMatch').onclick=()=>$('#matchModal').classList.remove('open');
+$('#matchDone').onclick=()=>$('#matchModal').classList.remove('open');
+$('#matchModal').onclick=e=>{if(e.target.id==='matchModal')e.currentTarget.classList.remove('open')};
+$('#submitMatch').onclick=async()=>{
+  const nickname=$('#matchNickname').value.trim(),gender=$('#matchGender').value,preferredGender=$('#matchPreferredGender').value,age=$('#matchAge').value,city=$('#matchCity').value.trim(),wechat=$('#matchWechat').value.trim();
+  if(!nickname||!gender||!preferredGender||!age||!city||!wechat){toast('请把必填信息补充完整');return}
+  if(!$('#matchConsent').checked){toast('请先确认隐私与匹配说明');return}
+  if(!client){toast('网络连接失败，请稍后再试');return}
+  const [desiredMbti,desiredZodiac]=resultData.targetType.split(/\s*×\s*/);
+  const button=$('#submitMatch');button.disabled=true;button.textContent='正在加入…';
+  try{
+    const {error}=await client.from('match_profiles').insert([{
+      nickname,group_name:$('#matchGroup').value.trim()||null,gender,age_range:age,city,preferred_gender:preferredGender,
+      self_mbti:$('#mbti').value,self_zodiac:$('#zodiac').value,desired_mbti:desiredMbti,desired_zodiac:desiredZodiac,wechat,consent:true,status:'active'
+    }]);
+    if(error)throw error;
+    $('#matchFormWrap').classList.add('hidden');$('#matchSuccess').classList.remove('hidden');toast('已加入同频匹配池');
+  }catch(e){console.error('match signup failed',e);toast('提交失败，请稍后再试')}
+  finally{button.disabled=false;button.textContent='确认加入'}
+};
 function boot(){showApp()}
 boot();
 </script>
