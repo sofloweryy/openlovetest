@@ -1,836 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>💖 测测命中另一半的星座与MBTI</title>
-<!-- 引入 Supabase 官方 SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root {
-  --primary-gradient: linear-gradient(135deg, #ff758f 0%, #ff4d6d 100%);
-  --bg-gradient: linear-gradient(135deg, #fff0f3 0%, #f3e8ff 100%);
-  --card-bg: #ffffff;
-  --text-main: #2b2d42;
-  --text-sub: #8d99ae;
-  --accent-bg: #fff5f7;
-  --border-color: #ffccd5;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
-  background: var(--bg-gradient);
-  color: var(--text-main);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 4px 16px 32px 16px;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.romantic-header-art {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 12px;
-  pointer-events: none;
-  margin-bottom: -2px;
-}
-
-.art-heart {
-  width: 10px;
-  height: 10px;
-  background: #ff4d6d;
-  transform: rotate(45deg);
-  position: relative;
-  animation: pulseGlow 2s ease-in-out infinite alternate;
-  opacity: 0.7;
-}
-
-.art-heart::before,
-.art-heart::after {
-  content: '';
-  width: 10px;
-  height: 10px;
-  background: #ff4d6d;
-  border-radius: 50%;
-  position: absolute;
-}
-
-.art-heart::before { left: -5px; top: 0; }
-.art-heart::after { left: 0; top: -5px; }
-
-.art-star {
-  width: 12px;
-  height: 12px;
-  background: #ffb703;
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  animation: starTwinkle 1.5s ease-in-out infinite alternate;
-  opacity: 0.8;
-}
-
-.art-bubble {
-  width: 16px;
-  height: 10px;
-  background: #ff758f;
-  border-radius: 6px;
-  position: relative;
-  opacity: 0.5;
-  animation: floatUp 3s ease-in-out infinite alternate;
-}
-
-.art-bubble::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 4px;
-  width: 0;
-  height: 0;
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  border-top: 4px solid #ff758f;
-}
-
-@keyframes pulseGlow {
-  0% { transform: rotate(45deg) scale(0.9); opacity: 0.5; }
-  100% { transform: rotate(45deg) scale(1.15); opacity: 0.85; }
-}
-
-@keyframes starTwinkle {
-  0% { transform: scale(0.8) rotate(0deg); opacity: 0.4; }
-  100% { transform: scale(1.1) rotate(15deg); opacity: 0.9; }
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(2px); }
-  100% { transform: translateY(-3px); }
-}
-
-.main-content {
-  width: 100%;
-  max-width: 500px;
-}
-
-.quiz-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 22px;
-  box-shadow: 0 15px 35px rgba(255, 77, 109, 0.12);
-  border: 2px solid #ffe5e9;
-  position: relative;
-}
-
-h1 {
-  font-size: 22px;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-top: 6px;
-  margin-bottom: 6px;
-  text-align: center;
-  font-weight: 900;
-  letter-spacing: 0.5px;
-}
-
-p.subtitle {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 20px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.form-group {
-  margin-bottom: 18px;
-  text-align: left;
-}
-
-label.question-title {
-  display: block;
-  font-size: 14.5px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text-main);
-  line-height: 1.4;
-}
-
-input[type="text"], select {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1.5px solid var(--border-color);
-  border-radius: 14px;
-  background-color: var(--accent-bg);
-  font-size: 14.5px;
-  color: var(--text-main);
-  outline: none;
-  font-weight: 600;
-}
-
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff4d6d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 16px;
-  padding-right: 40px;
-}
-
-.radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.radio-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  background-color: var(--accent-bg);
-  border: 1.5px solid var(--border-color);
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 13.5px;
-  color: #4a4e69;
-  transition: all 0.2s;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.radio-label:hover {
-  background-color: #ffe3e8;
-  border-color: #ff758f;
-}
-
-.radio-label input {
-  accent-color: #ff4d6d;
-  transform: scale(1.2);
-}
-
-button.submit-btn {
-  width: 100%;
-  padding: 16px;
-  background: var(--primary-gradient);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  box-shadow: 0 6px 20px rgba(255, 77, 109, 0.35);
-  letter-spacing: 1px;
-}
-
-button.submit-btn:active { transform: scale(0.98); }
-
-#result {
-  margin-top: 0px;
-  display: none;
-}
-
-.share-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 14px 22px 22px 22px;
-  box-shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
-  border: 2px solid #ffe5e9;
-  position: relative;
-}
-
-.poster-header {
-  text-align: center;
-  margin-bottom: 14px;
-  padding: 12px 12px;
-  border: 2px solid #ffccd5;
-  background: var(--accent-bg);
-  border-radius: 16px;
-}
-
-.user-badge {
-  font-size: 13px;
-  color: #7a6570; 
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-.user-badge span { 
-  color: #594a52; 
-  font-weight: bold; 
-}
-
-.match-target-label {
-  font-size: 16px;
-  color: #3a3845;
-  font-weight: 800;
-  margin: 4px 0 2px 0;
-  letter-spacing: 0.5px;
-}
-
-.match-target-highlight {
-  color: #ff4d6d;
-  font-size: 19px;
-  display: block;
-  margin-top: 2px;
-  font-weight: 900;
-}
-
-.score-badge {
-  background: var(--accent-bg);
-  border: 1.5px solid #ffccd5;
-  border-radius: 12px;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.score-num { font-size: 24px; font-weight: 900; color: #ff4d6d; }
-.score-sub { font-size: 12px; color: var(--text-sub); font-weight: 600; margin-top: 2px; }
-
-.analysis-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.analysis-item {
-  background: #fff8f9;
-  border-left: 4px solid #ff4d6d;
-  border-radius: 0 12px 12px 0;
-  padding: 12px 14px;
-}
-
-.item-title { font-size: 13.5px; font-weight: 800; color: #ff4d6d; margin-bottom: 4px; }
-.item-desc { font-size: 13px; line-height: 1.5; color: #4a4e69; font-weight: 500; }
-
-.poster-footer {
-  padding-top: 14px;
-  border-top: 1.5px dashed var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding-left: 0;
-}
-
-.footer-brand .brand-name {
-  font-size: 11px;
-  font-weight: bold;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-}
-.footer-brand .footer-sub { 
-  font-size: 10px; 
-  color: #aaa; 
-  margin-top: 2px; 
-  font-weight: normal;
-  white-space: nowrap;
-}
-
-.contact-btn {
-  background: linear-gradient(135deg, #ff758f 0%, #ff4d6d 100%);
-  color: #fff;
-  font-size: 11.5px;
-  padding: 8px 14px;
-  border-radius: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 3px 10px rgba(255, 77, 109, 0.3);
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.action-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.retry-btn {
-  background: #f1f2f6;
-  color: #57606f;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 16px;
-  font-size: 11.5px;
-  font-weight: bold;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.qr-modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(5px);
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-}
-
-.qr-card {
-  background: #fff;
-  padding: 24px 20px;
-  border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 320px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.qr-card h3 { font-size: 16px; color: #2b2d42; margin-bottom: 4px; }
-.qr-card p { font-size: 12px; color: #8d99ae; margin-bottom: 12px; }
-
-.wechat-box {
-  background: #fff0f3;
-  border: 1.5px dashed #ff4d6d;
-  color: #ff4d6d;
-  font-size: 16px;
-  font-weight: 900;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  user-select: all;
-}
-
-/* 弹窗输入框样式 */
-.modal-input-group {
-  text-align: left;
-  margin-bottom: 14px;
-}
-
-.modal-input-group label {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #4a4e69;
-  margin-bottom: 6px;
-}
-
-.modal-input-group input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid var(--border-color);
-  border-radius: 10px;
-  background-color: var(--accent-bg);
-  font-size: 13.5px;
-  color: var(--text-main);
-  outline: none;
-}
-
-.close-btn {
-  background: var(--primary-gradient);
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 14px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  width: 100%;
-  box-shadow: 0 5px 15px rgba(255, 77, 109, 0.35);
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="theme-color" content="#ff5f7e">
+  <title>心动关系画像｜测出真正适合你的恋爱搭子</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--ink:#292536;--muted:#776f82;--pink:#ff5578;--pink2:#ff8ca3;--soft:#fff3f6;--line:#f4d7df;--violet:#7c66e8;--card:#fff;--shadow:0 18px 55px rgba(94,57,80,.14)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 10% 0,#ffe0e8 0,transparent 32%),radial-gradient(circle at 100% 20%,#e9e1ff 0,transparent 32%),#fff9fb;padding:18px 14px 40px}
+    button,input,select{font:inherit}.shell{width:min(100%,620px);margin:auto}.topline{display:flex;align-items:center;justify-content:center;gap:8px;color:#9c7180;font-size:12px;margin:4px 0 12px}.topline span{padding:6px 10px;border-radius:99px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9)}
+    .card{background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.96);box-shadow:var(--shadow);border-radius:28px;padding:24px;backdrop-filter:blur(10px)}
+    h1{font-size:clamp(26px,7vw,36px);line-height:1.15;text-align:center;margin:4px 0 10px;letter-spacing:-1px}.gradient{background:linear-gradient(120deg,#f0446c,#8b63de);background-clip:text;-webkit-background-clip:text;color:transparent}.lead{text-align:center;color:var(--muted);line-height:1.65;font-size:14px;margin:0 auto 20px;max-width:470px}.trust{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:23px}.trust b{font-size:11px;color:#775d69;background:#fff5f7;border:1px solid #f7dbe2;border-radius:99px;padding:6px 9px}
+    .field{margin:0 0 15px}.field label{display:block;font-weight:750;font-size:14px;margin:0 0 7px}.field input,.field select{width:100%;border:1.5px solid var(--line);background:#fff9fb;color:var(--ink);border-radius:14px;padding:13px 14px;outline:none}.field input:focus,.field select:focus{border-color:var(--pink);box-shadow:0 0 0 4px #ffecf0}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .primary,.secondary{border:0;border-radius:15px;padding:14px 18px;font-weight:800;cursor:pointer;transition:.18s}.primary{width:100%;color:#fff;background:linear-gradient(120deg,var(--pink),#f06a8a 48%,#9569df);box-shadow:0 9px 22px rgba(255,85,120,.27)}.primary:hover{transform:translateY(-1px)}.secondary{background:#fff;color:#765f69;border:1.5px solid var(--line)}.micro{font-size:11px;color:#9a909d;text-align:center;line-height:1.5;margin:11px 0 0}
+    .hidden{display:none!important}.quiz-head{position:sticky;top:8px;z-index:4;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-radius:18px;padding:10px 0 12px}.progress-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px}.progress{height:7px;background:#f7e7ec;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),#9b6de0);border-radius:99px;transition:width .25s}
+    .question{padding:24px 0 4px}.question .kicker{color:var(--pink);font-size:12px;font-weight:850;margin-bottom:8px}.question h2{font-size:22px;line-height:1.42;margin:0 0 18px}.answers{display:grid;gap:10px}.answer{display:block;border:1.5px solid var(--line);border-radius:16px;background:#fffafb;padding:14px 15px;line-height:1.45;font-size:14px;font-weight:620;cursor:pointer;transition:.18s}.answer:hover{border-color:#ff9fb2;background:#fff4f7}.answer.selected{border-color:var(--pink);background:#fff0f4;box-shadow:0 0 0 3px #ffe4ea}.answer input{position:absolute;opacity:0}.nav{display:grid;grid-template-columns:110px 1fr;gap:10px;margin-top:22px}.nav .primary{padding:13px}.error{color:#d83259;background:#fff0f3;border-radius:12px;padding:10px 12px;font-size:12px;margin-top:12px}
+    .result-hero{text-align:center;padding:4px 0 18px}.eyebrow{font-size:12px;color:#927986;font-weight:800}.result-hero h2{font-size:28px;margin:8px 0 4px}.result-hero .target{font-size:20px;color:var(--pink);font-weight:900}.score-wrap{margin:17px auto 4px;width:126px;height:126px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--pink) var(--pct),#f6e5ea 0);position:relative}.score-wrap:after{content:"";position:absolute;inset:9px;background:white;border-radius:50%}.score{position:relative;z-index:1}.score strong{font-size:30px;color:var(--pink)}.score small{display:block;font-size:10px;color:var(--muted);font-weight:700}.type-pill{display:inline-block;margin:12px 0 0;padding:7px 12px;border-radius:99px;color:#705b79;background:#f6f0ff;font-size:12px;font-weight:800}
+    .insight{border-radius:18px;padding:16px;margin:11px 0;background:#fff7f9;border:1px solid #f7e2e7}.insight:nth-child(even){background:#f8f5ff;border-color:#e9e2fa}.insight h3{font-size:14px;margin:0 0 7px;color:#db4266}.insight:nth-child(even) h3{color:#7159c8}.insight p{font-size:13px;line-height:1.7;color:#554e5d;margin:0}.proof{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:18px 0}.meter{text-align:center}.meter b{font-size:11px;display:block;margin-bottom:6px}.meter span{display:block;height:54px;background:#f4e7ed;border-radius:8px;position:relative;overflow:hidden}.meter i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,var(--pink),#ff9aae);border-radius:8px 8px 0 0}.meter small{font-size:10px;color:var(--muted)}
+    .sharebox{margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);display:grid;grid-template-columns:1fr 1fr;gap:10px}.sharebox .primary{grid-column:1/-1}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#2f2834;color:#fff;padding:10px 15px;border-radius:99px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .loading{text-align:center;padding:55px 20px;color:var(--pink);font-weight:800}.footer{text-align:center;color:#a0939f;font-size:11px;line-height:1.6;margin:18px auto 0}.contact{border:0;background:transparent;color:#9a7a86;text-decoration:underline;cursor:pointer}.modal{position:fixed;inset:0;background:rgba(27,19,28,.58);display:none;place-items:center;padding:18px;z-index:30}.modal.open{display:grid}.modal-card{width:min(100%,330px);background:#fff;border-radius:22px;padding:24px;text-align:center}.modal-card h3{margin:0 0 8px}.wechat{background:var(--soft);color:var(--pink);font-size:18px;font-weight:900;border:1px dashed var(--pink);padding:13px;border-radius:13px;margin:14px 0;user-select:all}
+    @media(max-width:480px){body{padding:10px 10px 30px}.card{padding:20px 17px;border-radius:23px}.two{grid-template-columns:1fr}.question h2{font-size:20px}.nav{grid-template-columns:92px 1fr}.proof{gap:4px}.meter b{font-size:10px}}
+  </style>
 </head>
 <body>
-
-<div class="romantic-header-art">
-  <div class="art-heart"></div>
-  <div class="art-bubble"></div>
-  <div class="art-star"></div>
-  <div class="art-heart"></div>
-</div>
-
-<div class="main-content" id="mainContainer">
-  <div id="contentView">
-    <div class="quiz-card" id="quizSection">
-      <h1>💖 测测命中另一半的星座与MBTI</h1>
-      <p class="subtitle">全息星盘与人格交叉矩阵测算</p>
-
-      <div class="form-group">
-        <label class="question-title">你的姓名或昵称：</label>
-        <input type="text" id="userNameInput" placeholder="请输入你的名字或昵称">
+<main class="shell">
+  <div class="topline"><span>💗 15 个真实选择</span><span>⏱ 约 3 分钟</span><span>🔒 结果仅用于娱乐</span></div>
+  <div id="loading" class="card loading">正在打开你的专属测试…</div>
+  <section id="app" class="card hidden">
+    <div id="intro">
+      <h1>谁才是你真正会<br><span class="gradient">越爱越舒服的人？</span></h1>
+      <p class="lead">不是随便贴标签。用 15 个关系情境，拆出你在亲密关系里的真实需要，再匹配最合拍的 MBTI × 星座气质。</p>
+      <div class="trust"><b>相处节奏</b><b>情绪支持</b><b>沟通边界</b><b>爱的表达</b><b>长期价值</b></div>
+      <div class="field"><label for="userNameInput">先给这份结果署个名</label><input id="userNameInput" maxlength="16" placeholder="你的昵称"></div>
+      <div class="two">
+        <div class="field"><label for="mbti">你的 MBTI</label><select id="mbti"><option value="">请选择</option></select></div>
+        <div class="field"><label for="zodiac">你的太阳星座</label><select id="zodiac"><option value="">请选择</option></select></div>
       </div>
-
-      <div class="form-group">
-        <label class="question-title">你的 MBTI 类型：</label>
-        <select id="mbti">
-          <option value="" disabled selected style="color: #999;">请选择你的 MBTI 类型</option>
-          <option value="INTJ">INTJ 建筑师</option>
-          <option value="INTP">INTP 逻辑学家</option>
-          <option value="ENTJ">ENTJ 指挥官</option>
-          <option value="ENTP">ENTP 辩论家</option>
-          <option value="INFJ">INFJ 提倡者</option>
-          <option value="INFP">INFP 调停者</option>
-          <option value="ENFJ">ENFJ 主人公</option>
-          <option value="ENFP">ENFP 竞选者</option>
-          <option value="ISTJ">ISTJ 物流师</option>
-          <option value="ISFJ">ISFJ 守卫者</option>
-          <option value="ESTJ">ESTJ 总经理</option>
-          <option value="ESFJ">ESFJ 执政官</option>
-          <option value="ISTP">ISTP 鉴赏家</option>
-          <option value="ISFP">ISFP 探险家</option>
-          <option value="ESTP">ESTP 企业家</option>
-          <option value="ESFP">ESFP 表演者</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="question-title">你的太阳星座：</label>
-        <select id="zodiac">
-          <option value="" disabled selected style="color: #999;">请选择你的太阳星座</option>
-          <option value="白羊座">白羊座 (03.21 - 04.19)</option>
-          <option value="金牛座">金牛座 (04.20 - 05.20)</option>
-          <option value="双子座">双子座 (05.21 - 06.21)</option>
-          <option value="巨蟹座">巨蟹座 (06.22 - 07.22)</option>
-          <option value="狮子座">狮子座 (07.23 - 08.22)</option>
-          <option value="处女座">处女座 (08.23 - 09.22)</option>
-          <option value="天秤座">天秤座 (09.23 - 10.23)</option>
-          <option value="天蝎座">天蝎座 (10.24 - 11.22)</option>
-          <option value="射手座">射手座 (11.23 - 12.21)</option>
-          <option value="摩羯座">摩羯座 (12.22 - 01.19)</option>
-          <option value="水瓶座">水瓶座 (01.20 - 02.18)</option>
-          <option value="双鱼座">双鱼座 (02.19 - 03.20)</option>
-        </select>
-      </div>
-
-      <hr style="border: 0; border-top: 1.5px dashed var(--border-color); margin: 20px 0;">
-
-      <!-- 15 道题目 -->
-      <div class="form-group"><label class="question-title">1. 周末约会时，你更倾向于哪种行程安排？</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q1" value="A"> 提前做足攻略，时间与路线安排得井井有条</label><label class="radio-label"><input type="radio" name="q1" value="B"> 确定一个目的地，到了之后随性走走逛逛</label><label class="radio-label"><input type="radio" name="q1" value="C"> 无所谓行程，只要能和对方粘在一起就好</label><label class="radio-label"><input type="radio" name="q1" value="D"> 各自在家看看书/玩游戏，晚一点再聚餐</label></div></div>
-      <div class="form-group"><label class="question-title">2. 当你工作或学习遇到不顺心向对方倾诉时，你最希望：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q2" value="A"> 坚定地站在我这边，帮我吐槽排解情绪</label><label class="radio-label"><input type="radio" name="q2" value="B"> 冷静帮我分析原因，并给出具体的解决方案</label><label class="radio-label"><input type="radio" name="q2" value="C"> 带我去吃好吃的或散心，用行动转移注意力</label><label class="radio-label"><input type="radio" name="q2" value="D"> 静静倾听并拥抱我，给我充分的温柔共鸣</label></div></div>
-      <div class="form-group"><label class="question-title">3. 两个人产生分歧或小争执时，你通常会：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q3" value="A"> 希望当场直截了当说清楚，不把情绪留到明天</label><label class="radio-label"><input type="radio" name="q3" value="B"> 先各自冷静一会儿，找时间列出事实理性讨论</label><label class="radio-label"><input type="radio" name="q3" value="C"> 顺应对方的态度，主动给个软话避免冲突</label><label class="radio-label"><input type="radio" name="q3" value="D"> 戴上耳机做自己的事，等双方都恢复理智再聊</label></div></div>
-      <div class="form-group"><label class="question-title">4. 约会去网红餐厅排队需要等很长时间，你会：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q4" value="A"> 边排队边愉快聊天，把等待当成甜蜜的相处</label><label class="radio-label"><input type="radio" name="q4" value="B"> 果断换一家不需要等位的高品质餐厅，不浪费时间</label><label class="radio-label"><input type="radio" name="q4" value="C"> 取号后去附近买杯奶茶或逛街，时间到了再回来</label><label class="radio-label"><input type="radio" name="q4" value="D"> 听从对方的决定，对方想等就等、想换就换</label></div></div>
-      <div class="form-group"><label class="question-title">5. 在日常陪伴中，你更看重哪种相处状态？</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q5" value="A"> 两个人共享喜好，有聊不完的共同话题和理想</label><label class="radio-label"><input type="radio" name="q5" value="B"> 即使各自做不同的事情，呆在同个空间也感到舒服</label><label class="radio-label"><input type="radio" name="q5" value="C"> 定期有浪漫的仪式感和惊喜，保持感情热情</label><label class="radio-label"><input type="radio" name="q5" value="D"> 能互相帮助、在事业或生活上成为强有力的后盾</label></div></div>
-      <div class="form-group"><label class="question-title">6. 对于恋爱中的“报备”与社交边界，你觉得：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q6" value="A"> 主动告知行程是给彼此安全感的基本方式</label><label class="radio-label"><input type="radio" name="q6" value="B"> 保持信任即可，不需要事无巨细地汇报个人空间</label><label class="radio-label"><input type="radio" name="q6" value="C"> 只要不和异性有过于亲密的单独互动，其他都自由</label><label class="radio-label"><input type="radio" name="q6" value="D"> 最好共享彼此的日程卡，这样方便安排重合的空闲时间</label></div></div>
-      <div class="form-group"><label class="question-title">7. 挑选送给对方的生日礼物时，你更倾向于：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q7" value="A"> 实用性强、对方日常生活正需要的硬核物品</label><label class="radio-label"><input type="radio" name="q7" value="B"> 充满心意、有独特纪念意义或手工制作的礼物</label><label class="radio-label"><input type="radio" name="q7" value="C"> 带对方去体验一次高端SPA或旅行等浪漫记忆</label><label class="radio-label"><input type="radio" name="q7" value="D"> 直接询问对方想要什么，精准清空对方的购物车</label></div></div>
-      <div class="form-group"><label class="question-title">8. 如果原定的出行计划因为天气或突发状况取消，你的反应是：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q8" value="A"> 快速调整，迅速找寻室内或备选的替代方案</label><label class="radio-label"><input type="radio" name="q8" value="B"> 顺其自然，干脆改在家里休息、看电影点外卖</label><label class="radio-label"><input type="radio" name="q8" value="C"> 会感到些许沮丧，需要对方及时安抚情绪</label><label class="radio-label"><input type="radio" name="q8" value="D"> 觉得没关系，正好利用空出来的这段时间处理个人琐事</label></div></div>
-      <div class="form-group"><label class="question-title">9. 哪种类型的性格特征最容易吸引你？</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q9" value="A"> 沉稳靠谱、做事有条理、有担当的类型</label><label class="radio-label"><input type="radio" name="q9" value="B"> 幽默风趣、富有创造力、脑洞大开的类型</label><label class="radio-label"><input type="radio" name="q9" value="C"> 温柔细腻、懂得倾听、情绪价值拉满的体贴类型</label><label class="radio-label"><input type="radio" name="q9" value="D"> 清冷独立、智商超高、理性深沉的学霸类型</label></div></div>
-      <div class="form-group"><label class="question-title">10. 当你处于情绪低谷期不想说话时，希望对方：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q10" value="A"> 默默陪在旁边，不用说太多，给足安全感</label><label class="radio-label"><input type="radio" name="q10" value="B"> 给我独立的个人空间，等我想说的时候再开口</label><label class="radio-label"><input type="radio" name="q10" value="C"> 耐心引导我表达出来，帮我排解心中的不快</label><label class="radio-label"><input type="radio" name="q10" value="D"> 用逻辑帮我厘清问题根源，一步步拆解烦恼</label></div></div>
-      <div class="form-group"><label class="question-title">11. 你如何看待在朋友圈或社交平台公开恋情？</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q11" value="A"> 这是对感情负责的态度，应该大方分享给亲友</label><label class="radio-label"><input type="radio" name="q11" value="B"> 个人生活没必要向外界展示，低调幸福就好</label><label class="radio-label"><input type="radio" name="q11" value="C"> 顺其自然，有合适契机或纪念日就发，不强求</label><label class="radio-label"><input type="radio" name="q11" value="D"> 仅设置好友可见或只发背景图，留一点私密感</label></div></div>
-      <div class="form-group"><label class="question-title">12. 忙碌状态下对方未能及时回复微信，你的想法是：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q12" value="A"> 理解对方在忙，自己也专注做手头的事</label><label class="radio-label"><input type="radio" name="q12" value="B"> 会有些许焦虑，但等对方空闲后说明原因即可</label><label class="radio-label"><input type="radio" name="q12" value="C"> 习惯对方提前交代一声，避免不必要的猜测与担心</label><label class="radio-label"><input type="radio" name="q12" value="D"> 完全不care，反正大家都是成熟的成年人了</label></div></div>
-      <div class="form-group"><label class="question-title">13. 你认为一段长久健康的恋爱关系，核心在于：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q13" value="A"> 相互理解与包容，能够彼此陪伴成长</label><label class="radio-label"><input type="radio" name="q13" value="B"> 相同的价值观与生活步调</label><label class="radio-label"><input type="radio" name="q13" value="C"> 保持各自的独立性，同时又紧密依恋</label><label class="radio-label"><input type="radio" name="q13" value="D"> 彼此高度信任，坦诚相对不隐瞒</label></div></div>
-      <div class="form-group"><label class="question-title">14. 对于日常生活中的消费与财务规划，你倾向于：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q14" value="A"> 互相大方付出，不计较小钱，重大支出共同商议</label><label class="radio-label"><input type="radio" name="q14" value="B"> 保持清晰的账目或AA制，避免经济上的牵扯</label><label class="radio-label"><input type="radio" name="q14" value="C"> 共同储蓄，为未来的生活与旅行做计划</label><label class="radio-label"><input type="radio" name="q14" value="D"> 谁赚钱多谁多承担一点，随性自然</label></div></div>
-      <div class="form-group"><label class="question-title">15. 你心目中理想的“灵魂伴侣”最突出的品质是：</label><div class="radio-group"><label class="radio-label"><input type="radio" name="q15" value="A"> 能看穿你的坚强，懂你所有的欲言又止</label><label class="radio-label"><input type="radio" name="q15" value="B"> 能陪你体验生活中的酸甜苦辣，脚踏实地</label><label class="radio-label"><input type="radio" name="q15" value="C"> 在思想和价值观上能与你产生深刻的共鸣</label><label class="radio-label"><input type="radio" name="q15" value="D"> 有独立的精神世界，能带你看到更大世界</label></div></div>
-
-      <button class="submit-btn" onclick="calculateMatch()">查看结果 ✨</button>
+      <button class="primary" id="startBtn">开始探索我的心动模式 →</button>
+      <p class="micro">你的选择用于生成本次结果；请勿填写真实姓名或其他敏感信息。</p>
     </div>
-
-    <div id="result">
-      <div class="share-card">
-        <div class="poster-header">
-          <div class="user-badge"><span id="displayName" style="font-weight: bold;">某某</span> 的人格：<span id="userAttr">ENTJ × 狮子座</span></div>
-          <div class="match-target-label">本命配对</div>
-          <div class="match-target">
-            <span class="match-target-highlight" id="targetType">INFP 调停者 × 双鱼座</span>
-          </div>
-        </div>
-
-        <div class="score-badge">
-          <div class="score-num" id="scoreNum">98.6%</div>
-          <div class="score-sub" id="scoreSubText">💞 灵魂契合指数 · 命中注定的双向奔赴</div>
-        </div>
-
-        <div class="analysis-list">
-          <div class="analysis-item"><div class="item-title">另一半画像 🧸</div><div class="item-desc" id="desc0">加载中...</div></div>
-          <div class="analysis-item"><div class="item-title">灵魂默契 ✨</div><div class="item-desc" id="desc1">加载中...</div></div>
-          <div class="analysis-item"><div class="item-title">避坑指南 🛡️</div><div class="item-desc" id="desc2">加载中...</div></div>
-          <div class="analysis-item"><div class="item-title">升温建议 🍯</div><div class="item-desc" id="desc3">加载中...</div></div>
-        </div>
-
-        <div class="poster-footer">
-          <div class="footer-brand">
-            <div class="brand-name">星座与MBTI·双重伴侣配对测算 🔮</div>
-            <div class="footer-sub">纯属娱乐，如不雷同概不负责(嘿嘿😁</div>
-          </div>
-          <button class="contact-btn" onclick="showQRCode()">💬 此处有惊喜</button>
-        </div>
-
-        <div class="action-row">
-          <button class="retry-btn" onclick="resetQuiz()">🔄 重新测算</button>
-        </div>
-      </div>
+    <div id="quiz" class="hidden">
+      <div class="quiz-head"><div class="progress-row"><span id="dimension">相处节奏</span><span id="counter">1 / 15</span></div><div class="progress"><i id="bar"></i></div></div>
+      <div class="question"><div class="kicker" id="kicker">凭第一感觉选，不用想太久</div><h2 id="questionText"></h2><div class="answers" id="answers"></div><div id="quizError" class="error hidden">先选一个最像你的答案吧</div></div>
+      <div class="nav"><button class="secondary" id="prevBtn">上一步</button><button class="primary" id="nextBtn">下一题</button></div>
     </div>
-  </div>
-</div>
-
-<!-- 弹窗：新增输入项 -->
-<div class="qr-modal" id="qrModal">
-  <div class="qr-card">
-    <h3>💬 联系美丽且智慧的开发者</h3>
-    <p>长按或复制下方微信号添加</p>
-    <div class="wechat-box">vildbloom</div>
-    
-    <!-- 新增的输入项 -->
-    <div class="modal-input-group">
-      <label>其他想说的/留下你的微信/手机号：</label>
-      <input type="text" id="userNoteInput" placeholder="请输入你想说的话或联系方式...">
+    <div id="result" class="hidden">
+      <div class="result-hero"><div class="eyebrow"><span id="displayName"></span> 的关系画像</div><h2>你最容易爱上</h2><div class="target" id="targetType"></div><div class="type-pill" id="archetype"></div><div class="score-wrap" id="scoreRing"><div class="score"><strong id="scoreNum"></strong><small>适配指数</small></div></div><p class="lead" id="scoreLine"></p></div>
+      <div class="proof" id="meters"></div>
+      <div id="insights"></div>
+      <div class="sharebox"><button class="primary" id="shareBtn">把这份“很准”分享给朋友</button><button class="secondary" id="copyBtn">复制结果文案</button><button class="secondary" id="againBtn">重新测一次</button></div>
     </div>
-
-    <!-- 按钮文案 -->
-    <button class="close-btn" onclick="hideQRCode()">马上去，我倒是要看看</button>
-  </div>
-</div>
-
+  </section>
+  <p class="footer">关系没有标准答案，结果用于自我观察与轻松分享。</p>
+</main>
+<div class="toast" id="toast">已复制</div>
 <script>
-  const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co'; 
-  const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
-  
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  let currentRecordId = null;
-
-  const scoreSubPool = [
-    "💞 灵魂契合指数 · 命中注定的双向奔赴",
-    "💞 命定羁绊指数 · 走过千山万水终于等到你",
-    "💞 磁场引力指数 · 银河系里最完美的磁场交错",
-    "💞 心动共鸣指数 · 彼此眼底藏着星辰大海与温柔",
-    "💞 浪漫热恋指数 · 把平淡岁月过成热烈偶像剧",
-    "💞 宿命交织指数 · 连灵魂的频率都分毫不差地吻合",
-    "💞 偏爱指数 · 被坚定选择的极致安全感降临",
-    "💞 缘分天定指数 · 跨越山海只为与你撞个满怀",
-    "💞 星轨奇缘指数 · 两个孤单灵魂在宇宙中精准相认",
-    "💞 纯爱共振指数 · 历经千帆依然为你心动如初"
-  ];
-
-  const mbtiTargetMap = {
-    'INTJ': { type: 'ENFP 竞选者', baseDesc: '思维跳跃到外太空、眼睛里永远闪烁着好奇光芒的治愈系小太阳，擅长用最灿烂的笑容融化你高冷的外壳。' },
-    'INTP': { type: 'ENTJ 指挥官', baseDesc: '自带强大御姐/霸总磁场的行动派，走路带风、雷厉风行，但在面对你时眼神会瞬间切换成专属的无限宠溺。' },
-    'ENTJ': { type: 'INFP 调停者', baseDesc: '拥有极其细腻丰富的内心世界与浪漫艺术细胞，仿佛落入凡间的纯爱战神，会把对你的爱意写进每一句晚安里。' },
-    'ENTP': { type: 'INFJ 提倡者', baseDesc: '外表清冷神秘、内心深情专一的高岭之花，具备一眼看穿你所有伪装与疲惫的超强直觉。' },
-    'INFJ': { type: 'ENTP 辩论家', baseDesc: '行走的快乐源泉与社交永动机，永远对世界保持着狂热的好奇心，像个怎么都玩不累的大男孩/大女孩。' },
-    'INFP': { type: 'ENFJ 主人公', baseDesc: '像一块散发着奶油香气的大暖炉，无时无刻不在散发着“要把世界上最好的一切都捧到你眼前”的炙热偏爱。' },
-    'ENFJ': { type: 'INFP 调停者', baseDesc: '纯情、浪漫且自带唯美滤镜，会把给你的每一句早安和晚安都写得像情诗一样温柔。' },
-    'ENFP': { type: 'INTJ 建筑师', baseDesc: '嘴上嫌弃“真拿你没办法”，转头却已经想吃的美食、想去的地方全部默默安排得井井有条的可靠大山。' },
-    'ISTJ': { type: 'ESFP 表演者', baseDesc: '浑身冒着甜气的社交小甜豆，走到哪里就把欢声笑语带到哪里，能把枯燥乏味的柴米油盐日子过成偶像剧。' },
-    'ISFJ': { type: 'ESTP 企业家', baseDesc: '元气满满、勇敢无畏的小太阳，总是带着一脸坏笑拉着你冲向各种新鲜刺激的新奇好玩世界。' },
-    'ESTJ': { type: 'ISFP 探险家', baseDesc: '自带高级艺术细胞的温柔宝藏，家里永远被他收拾得温馨又好看，连一片落叶都能被他做成精致的手作。' },
-    'ESFJ': { type: 'ISTP 鉴赏家', baseDesc: '外表酷酷、动手能力满分的技术流小达人，总能在你随口一句“这个东西坏了”的时候秒变修仙大师轻松搞定。' },
-    'ISTP': { type: 'ESFJ 执政官', baseDesc: '行走的夸夸群群主兼专属小太阳，眼里永远全心全意只有你，恨不得向全世界疯狂安利你的绝世帅气。' },
-    'ISFP': { type: 'ESTJ 总经理', baseDesc: '靠谱到让人想流泪的超级大靠山，把生活和未来数年规划得井井有条，是你的全能生活大管家。' },
-    'ESTP': { type: 'ISFJ 守卫者', baseDesc: '像一杯温热的红糖姜茶，总是把你的饮食起居照顾得细致入微，连你随口说的一句话、爱吃的小吃都默默记在心里。' },
-    'ESFP': { type: 'ISTJ 物流师', baseDesc: '稳重、专一且极其靠谱的长期主义代表，虽然嘴上不擅长说甜言蜜语，但所有的安全感都落实在每一个实际行动里。' }
-  };
-
-  const zodiacFlavorMap = {
-    '白羊座': {
-      trait: '白羊座',
-      merit: '你们在磁场上有着干柴烈火般的吸引力：你负责提供理性或深度的思考，对方则用白羊座特有的炽热和毫无保留的偏爱，把你的生活直接带入高甜频道。吵架绝不过夜！',
-      pitfall: '千万别在对方情绪上头、急于表达时泼冷水或讲大道理。白羊座吃软不吃硬，多给一个热烈的拥抱比争辩谁对谁错管用一百倍。',
-      suggestion: '周末临时起意，手拉手去游乐园坐一次刺激的大摆锤，或者在深夜无人的街道压马路，在风中大声对彼此说出心里话。'
-    },
-    '金牛座': {
-      trait: '金牛座',
-      merit: '岁月静好的具象化体现：你们之间有一种无需多言的默契。对方用慢热却极其稳固的陪伴，把你所有的不安稳全部治愈，柴米油盐在他手里也能开出浪漫的花。',
-      pitfall: '金牛座固执起来十头牛都拉不回来，千万别在气头上针尖对麦芒。如果遇到分歧，先各自冷静半小时再轻声细语地沟通。',
-      suggestion: '一起系上围裙在家研究一道复杂的双人晚餐，或者去逛家具店挑选一个温馨的小夜灯，把生活过得踏实而有质感。'
-    },
-    '双子座': {
-      trait: '双子座',
-      merit: '行走的灵感碰撞机：你们在一起永远不会感到无聊。从宇宙起源聊到隔壁八卦，对方精妙的脑洞总能完美接住你的每一个梗，是灵魂与智商的双重共振。',
-      pitfall: '双子座讨厌一成不变的沉闷生活。当生活陷入乏味时，要学会主动制造新鲜感，比如突然换个约会地点或玩一个角色扮演小游戏。',
-      suggestion: '深夜关掉手机，两个人盘腿坐在地毯上玩桌游，在不断的互怼和爆笑中拉近彼此的心灵距离。'
-    },
-    '巨蟹座': {
-      trait: '巨蟹座',
-      merit: '被捧在手心里的极致温柔：对方拥有极其细腻的直觉，总能比你自己更早发现你的疲惫。你所有的坏脾气和脆弱，在他眼里都是需要被融化的可爱。',
-      pitfall: '巨蟹座容易陷入默默生闷气和自我内耗。当你发现对方开始变得沉默时，主动温柔地问一句“怎么啦”，就能瞬间瓦解他的防线。',
-      suggestion: '在一个雨天一起窝在沙发里看一部温情的经典老电影，怀里抱个抱枕，享受不被打扰的二人世界。'
-    },
-    '狮子座': {
-      trait: '狮子座',
-      merit: '霸气侧漏与极度专一的结合：在外人面前威严十足的狮子座，一到你面前就会变成大型黏人大猫。他恨不得向全世界宣告你的好，给你百分百的底气。',
-      pitfall: '狮子座极其要面子，千万别在大庭广众之下毫无顾忌地数落或反驳他。有意见关起门来私下沟通，顺着毛摸，他能把天上的星星都摘给你。',
-      suggestion: '带对方去吃一顿精致的私房菜，或者在公开场合大大方方地夸奖他的付出，满足狮子座天然的被崇拜欲。'
-    },
-    '处女座': {
-      trait: '处女座',
-      merit: '细节控的顶级浪漫：对方不会说太多天花乱坠的情话，但会在你感冒时默默准备好温水和药，把你的衣食住行安排得滴水不漏，是实干派的纯爱代表。',
-      pitfall: '处女座容易开启唠叨模式或挑剔小毛病。当对方开始碎碎念时，微笑着抱住他说“有你照顾我真好”，瞬间就能把唠叨变成宠溺。',
-      suggestion: '周末一起大扫除，把房间收拾得一尘不染，然后坐在干净的地毯上喝一杯手冲咖啡，享受整洁带来的治愈感。'
-    },
-    '天秤座': {
-      trait: '天秤座',
-      merit: '视觉与灵魂的双重享受：你们对于美、艺术和生活品质有着惊人一致的追求。每次并肩走在街上，连路人都会忍不住回头多看两眼这神仙眷侣般的组合。',
-      pitfall: '天秤座有严重的“选择困难症”，在遇到重大决定时容易摇摆不定。这时候你需要展现决断力，帮对方果断拍板，他会对你产生无限的崇拜。',
-      suggestion: '盛装打扮去美术馆看一场艺术展，或者去一家非常有情调的Livehouse听一场现场音乐会。'
-    },
-    '天蝎座': {
-      trait: '天蝎座',
-      merit: '灵魂深处的宿命羁绊：对方拥有极其深邃且专一的爱，能够精准看穿你所有的伪装与坚强。在天蝎座眼里，你是独一无二、无可替代的唯一信仰。',
-      pitfall: '天蝎座的安全感较低，切忌和异性保持过分暧昧的距离。对天蝎座最好的报答就是事无巨细的坦诚与毫无保留的偏爱。',
-      suggestion: '在深夜关掉大客厅的大灯，只留一盏暖黄色小夜灯，互诉心底最深处的隐秘过往，建立绝对私密的灵魂契约。'
-    },
-    '射手座': {
-      trait: '射手座',
-      merit: '风一般自由却愿意为你停泊的灵魂：对方不仅是你的恋人，更是你探索这个广阔世界的最佳旅伴。和射手在一起，生活永远充满未知的惊喜与欢笑。',
-      pitfall: '射手座需要适度的个人空间和呼吸感，千万别试图用条条框框把对方死死捆绑住。你越是给其自由，他越是会死心塌地黏着你。',
-      suggestion: '来一场说走就走的周末周边自驾游，开着车载音乐去山顶看日落，把烦恼全部丢在风里。'
-    },
-    '摩羯座': {
-      trait: '摩羯座',
-      merit: '最让人安心的定海神针：对方不屑于用花言巧语哄人，但他早已经在心里的未来蓝图里，把你的名字写在了最核心的位置。和你在一起，未来每一步都脚踏实地。',
-      pitfall: '摩羯座工作起来往往会化身“拼命三郎”而忽略你的情绪。这时候别生闷气，直接发个可爱表情包把对方从工作中拉出来陪你。',
-      suggestion: '坐下来一起规划一次长途旅游的预算和行程，或者为明年的小目标共同存一笔“恋爱基金”，享受一起成长的快乐。'
-    },
-    '水瓶座': {
-      trait: '水瓶座',
-      merit: '人间清醒与浪漫怪咖的完美结合：你们彼此独立又互相吸引。对方能懂你那些古怪、甚至在外人看来不可理喻的小坚持，是世上最懂你的灵魂知己。',
-      pitfall: '水瓶座有时会突然陷入“自闭”的电量耗尽状态。这时候千万不要疯狂夺命连环call，给彼此半天独处的时间，电量充满后他会主动贴过来。',
-      suggestion: '一起去探索一家极其小众、充满赛博朋克或复古风格的独立书店，淘一本奇奇怪怪的旧书交换阅读。'
-    },
-    '双鱼座': {
-      trait: '双鱼座',
-      merit: '纯爱天花板的无敌治愈：对方会把生活过成偶像剧，随时随地给你制造各种浪漫的小惊喜。你的每一个小情绪，他都能用眼泪和拥抱给你最完美的共情。',
-      pitfall: '双鱼座有时会陷入不切实际的胡思乱想或小委屈中。当对方情绪泛滥时，不要用冰冷的逻辑去反驳，只要温柔地抱紧他并说“我在”就足够了。',
-      suggestion: '在房间里铺上满地的气球和灯带，一起看一场温馨的童话动画片，让童心在成年人的世界里肆意生长。'
-    }
-  };
-
-  // 点击「此处有惊喜」时触发：弹出二维码
-  function showQRCode() {
-    document.getElementById('qrModal').style.display = 'flex';
-  }
-
-  // 关闭弹窗并加了 await 确保异步请求发出去后再关闭
-  async function hideQRCode() {
-    const userNote = document.getElementById('userNoteInput').value.trim();
-    
-    if (currentRecordId) {
-      try {
-        const updateData = { 
-          clicked_surprise: true,
-          user_note: userNote || null 
-        };
-
-        const { error } = await supabaseClient
-          .from('openlovetest')
-          .update(updateData)
-          .eq('id', currentRecordId);
-
-        if (error) {
-          console.error('更新失败，可能是 Supabase RLS 策略拦截：', error.message);
-        } else {
-          console.log('成功记录：惊喜点击及留言已写入数据库！');
-        }
-      } catch (err) {
-        console.error('网络异常：', err);
-      }
-    }
-
-    // 隐藏弹窗
-    document.getElementById('qrModal').style.display = 'none';
-  }
-
-  async function calculateMatch() {
-    const userName = document.getElementById('userNameInput').value.trim();
-    const mbti = document.getElementById('mbti').value;
-    const zodiac = document.getElementById('zodiac').value;
-
-    if (!userName) { alert('请先输入你的名字或昵称哦！'); return; }
-    if (!mbti) { alert('请先选择你的 MBTI 类型哦！'); return; }
-    if (!zodiac) { alert('请先选择你的太阳星座哦！'); return; }
-
-    for (let i = 1; i <= 15; i++) {
-      const radios = document.getElementsByName(`q${i}`);
-      let answered = false;
-      for (let r of radios) { if (r.checked) { answered = true; break; } }
-      if (!answered) { alert(`还有未完成的题目哦！请检查第 ${i} 题。`); return; }
-    }
-
-    const mbtiObj = mbtiTargetMap[mbti] || mbtiTargetMap['ESTP'];
-    const zodiacObj = zodiacFlavorMap[zodiac] || zodiacFlavorMap['双鱼座'];
-
-    const randomScore = (Math.random() * (99.8 - 93.2) + 93.2).toFixed(1);
-    const randomSubText = scoreSubPool[Math.floor(Math.random() * scoreSubPool.length)];
-
-    const targetTypeStr = `${mbtiObj.type} × ${zodiacObj.trait} (${randomScore}%)`;
-
-    const fourConclusions = `
-【另一半画像】${mbtiObj.baseDesc}
-【灵魂默契】${zodiacObj.merit}
-【避坑指南】${zodiacObj.pitfall}
-【升温建议】${zodiacObj.suggestion}
-    `.trim();
-
-    try {
-      const { data, error } = await supabaseClient
-        .from('openlovetest')
-        .insert([
-          { 
-            nickname: userName, 
-            mbti: mbti, 
-            constellation: zodiac,
-            target_type: targetTypeStr,         
-            combined_result: fourConclusions,   
-            clicked_surprise: false             
-          }
-        ])
-        .select();
-        
-      if (error) {
-        console.error('Supabase 写入失败：', error.message);
-      } else if (data && data.length > 0) {
-        currentRecordId = data[0].id; 
-        console.log('数据成功写入 Supabase，当前记录ID：', currentRecordId);
-      }
-    } catch (err) {
-      console.error('网络异常：', err);
-    }
-
-    document.getElementById('displayName').innerText = userName;
-    document.getElementById('userAttr').innerText = `${mbti} × ${zodiac}`;
-    document.getElementById('targetType').innerText = targetTypeStr;
-    document.getElementById('scoreNum').innerText = randomScore + '%';
-    document.getElementById('scoreSubText').innerText = randomSubText;
-    
-    document.getElementById('desc0').innerText = mbtiObj.baseDesc;
-    document.getElementById('desc1').innerText = zodiacObj.merit;
-    document.getElementById('desc2').innerText = `避坑小提醒：${zodiacObj.pitfall}`;
-    document.getElementById('desc3').innerText = `互动温馨秘诀：${zodiacObj.suggestion}`;
-
-    document.getElementById('quizSection').style.display = 'none';
-    document.getElementById('result').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function resetQuiz() {
-    currentRecordId = null; 
-    document.getElementById('userNoteInput').value = ''; 
-    document.getElementById('quizSection').style.display = 'block';
-    document.getElementById('result').style.display = 'none';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+const SB_URL='https://hrgzmwtgpacdxifcevwy.supabase.co';
+const SB_KEY='sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
+const client=window.supabase?.createClient(SB_URL,SB_KEY);
+const pathParts=location.pathname.split('/').filter(Boolean);const currentCode=pathParts.at(-1)||'';
+const dims=['节奏','共情','边界','表达','长期'];
+const dimNames={节奏:'相处节奏',共情:'情绪支持',边界:'沟通边界',表达:'爱的表达',长期:'长期价值'};
+const questions=[
+{d:'节奏',q:'理想的周末约会，你更想怎么过？',a:[['提前商量好路线，舒服又高效','稳'],['定个方向，边走边发现惊喜','趣'],['去哪不重要，黏在一起就很好','暖'],['各自充电，晚点再一起吃饭','界']]},
+{d:'共情',q:'你带着坏情绪回家，最希望 TA 的第一反应是？',a:[['先抱抱我，告诉我“我在”','暖'],['听我说完，再帮我理清问题','智'],['拉我出去吃点好的，换换心情','趣'],['问我想独处还是想陪伴','界']]},
+{d:'边界',q:'发生分歧时，哪种处理方式最让你安心？',a:[['趁热坦白说开，但不互相攻击','直'],['都冷静一下，约定稍后再聊','界'],['先照顾彼此情绪，再讨论对错','暖'],['把事实和方案摆出来解决','智']]},
+{d:'节奏',q:'热门餐厅要排很久，你更欣赏 TA 怎么做？',a:[['陪我排队，等待也能聊得开心','暖'],['立刻找同水准备选，不浪费时间','稳'],['先取号，再去附近随便逛逛','趣'],['先问我的想法，再一起决定','界']]},
+{d:'表达',q:'哪一种日常，最像你心里的“被爱”？',a:[['有说不完的话，也愿意分享小事','暖'],['安静待在同一空间也不尴尬','界'],['偶尔准备惊喜，保持心动感','趣'],['遇到现实问题时能并肩处理','稳']]},
+{d:'边界',q:'恋爱里的报备，你认同哪一种？',a:[['重要行程主动说，让彼此放心','稳'],['彼此信任，不必事无巨细汇报','界'],['提前说清异性交往边界即可','直'],['共享大致日程，方便安排相处','暖']]},
+{d:'表达',q:'收到哪种生日礼物，你会真正记很久？',a:[['我正需要、而且对方留意到了的东西','稳'],['亲手做的、带着专属记忆的礼物','暖'],['一次没体验过的旅行或活动','趣'],['直接问我想要什么，精准送到心坎','直']]},
+{d:'节奏',q:'期待很久的旅行临时取消，你希望你们？',a:[['迅速制定一个同样不错的 B 计划','稳'],['顺势宅家，把意外过成小假期','界'],['允许失落，先互相安慰一下','暖'],['临时起意，去做另一件新鲜事','趣']]},
+{d:'长期',q:'哪种特质最容易让你产生长期好感？',a:[['靠谱、有担当，说到做到','稳'],['有趣、有创造力，总能打开新世界','趣'],['细腻、会倾听，让人敢做自己','暖'],['独立、有想法，彼此互相启发','智']]},
+{d:'共情',q:'你情绪低落又不想说话时，希望 TA？',a:[['安静陪着，给我一个拥抱','暖'],['尊重沉默，等我主动开口','界'],['用具体行动照顾好我的生活','稳'],['温柔提问，帮我看清情绪来源','智']]},
+{d:'边界',q:'关于公开恋情，你更舒服的方式是？',a:[['大方公开，让关系有确定感','直'],['偶尔分享，不把生活变成表演','暖'],['尊重双方隐私，是否公开都可以','界'],['重要节点公开，日常低调经营','稳']]},
+{d:'共情',q:'对方很久没回消息时，你最希望真实情况是？',a:[['忙完主动解释，也给我一个交代','稳'],['提前说一声，让我不用猜','直'],['我们都不需要靠秒回来证明爱','界'],['回来后认真回应我刚才说的事','暖']]},
+{d:'长期',q:'你认为健康关系最核心的能力是？',a:[['承诺稳定，困难时也不轻易离开','稳'],['坦诚沟通，问题不靠猜','直'],['理解差异，给彼此空间','界'],['持续好奇，一起创造新体验','趣']]},
+{d:'长期',q:'谈到共同财务，你更认同？',a:[['设共同目标，也保留各自账户','界'],['一起做预算，让未来看得见','稳'],['重要原则说清，其他灵活处理','直'],['钱也要用来创造值得记住的体验','趣']]},
+{d:'表达',q:'如果只能选一个，你最想要怎样的灵魂伴侣？',a:[['让我安心落地的长期队友','稳'],['真正懂我情绪的温柔同盟','暖'],['和我探索世界的有趣搭子','趣'],['尊重独立、又能深度对话的知己','智']]}
+];
+const profile={稳:{name:'稳定共建型',mbti:['ISTJ','ISFJ','ESTJ'],z:['金牛座','摩羯座','处女座'],desc:'你要的不是轰轰烈烈的承诺，而是把承诺落实在每一次准时、每一个计划和每个困难时刻。'},暖:{name:'温柔共情型',mbti:['INFJ','ENFJ','INFP'],z:['巨蟹座','双鱼座','天秤座'],desc:'你会被真正听懂你的人打动。TA 不急着纠正你的感受，而是先让你知道：在这段关系里，你可以放心做自己。'},趣:{name:'浪漫探索型',mbti:['ENFP','ENTP','ESFP'],z:['射手座','双子座','白羊座'],desc:'你需要的不只是恋人，也是能让生活不断长出新鲜感的搭档。你们因好奇靠近，也会在共同体验中越来越亲密。'},界:{name:'自由同频型',mbti:['INTJ','ISTP','INTP'],z:['水瓶座','天秤座','射手座'],desc:'你期待亲密，但不想失去自己。最适合你的人懂得靠近，也懂得留白；信任不是查岗，而是彼此都有选择留下的自由。'},直:{name:'坦诚并肩型',mbti:['ENTJ','ESTP','ENFJ'],z:['白羊座','狮子座','天蝎座'],desc:'你不怕关系里有问题，怕的是问题被隐藏。清晰表达、及时回应和共同解决，会让你比甜言蜜语更有安全感。'},智:{name:'深度知己型',mbti:['INTP','INFJ','INTJ'],z:['水瓶座','天蝎座','处女座'],desc:'你容易被有洞察力、能深聊的人吸引。真正的心动来自“TA 不只听见我的话，也理解我为何这样想”。'}};
+const mbtis=['INTJ 建筑师','INTP 逻辑学家','ENTJ 指挥官','ENTP 辩论家','INFJ 提倡者','INFP 调停者','ENFJ 主人公','ENFP 竞选者','ISTJ 物流师','ISFJ 守卫者','ESTJ 总经理','ESFJ 执政官','ISTP 鉴赏家','ISFP 探险家','ESTP 企业家','ESFP 表演者'];
+const zodiacs=['白羊座 03.21–04.19','金牛座 04.20–05.20','双子座 05.21–06.21','巨蟹座 06.22–07.22','狮子座 07.23–08.22','处女座 08.23–09.22','天秤座 09.23–10.23','天蝎座 10.24–11.22','射手座 11.23–12.21','摩羯座 12.22–01.19','水瓶座 01.20–02.18','双鱼座 02.19–03.20'];
+let index=0,answers=Array(15).fill(null),resultData=null;
+const $=s=>document.querySelector(s); const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+mbtis.forEach(x=>$('#mbti').insertAdjacentHTML('beforeend',`<option value="${x.slice(0,4)}">${x}</option>`));zodiacs.forEach(x=>$('#zodiac').insertAdjacentHTML('beforeend',`<option value="${x.slice(0,3)}">${x}</option>`));
+function toast(t){$('#toast').textContent=t;$('#toast').classList.add('show');setTimeout(()=>$('#toast').classList.remove('show'),1800)}
+function showApp(){ $('#loading').classList.add('hidden');$('#app').classList.remove('hidden') }
+function renderQuestion(){const o=questions[index];$('#dimension').textContent=dimNames[o.d];$('#counter').textContent=`${index+1} / 15`;$('#bar').style.width=`${(index+1)/15*100}%`;$('#questionText').textContent=o.q;$('#answers').innerHTML=o.a.map((a,i)=>`<label class="answer ${answers[index]===i?'selected':''}"><input type="radio" name="answer" value="${i}" ${answers[index]===i?'checked':''}>${String.fromCharCode(65+i)}. ${a[0]}</label>`).join('');$('#prevBtn').textContent=index?'上一步':'返回';$('#nextBtn').textContent=index===14?'生成我的关系画像 ✨':'下一题';$('#quizError').classList.add('hidden');document.querySelectorAll('.answer').forEach((el,i)=>el.onclick=()=>{answers[index]=i;document.querySelectorAll('.answer').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');$('#quizError').classList.add('hidden')})}
+$('#startBtn').onclick=()=>{if(!$('#userNameInput').value.trim()){toast('先写一个昵称吧');return}if(!$('#mbti').value||!$('#zodiac').value){toast('再选好 MBTI 和星座');return}$('#intro').classList.add('hidden');$('#quiz').classList.remove('hidden');renderQuestion()};
+$('#prevBtn').onclick=()=>{if(index===0){$('#quiz').classList.add('hidden');$('#intro').classList.remove('hidden')}else{index--;renderQuestion()}};
+$('#nextBtn').onclick=()=>{if(answers[index]===null){$('#quizError').classList.remove('hidden');return}if(index<14){index++;renderQuestion();scrollTo({top:0,behavior:'smooth'})}else calculate()};
+function calculate(){const counts={稳:0,暖:0,趣:0,界:0,直:0,智:0};const ds={节奏:0,共情:0,边界:0,表达:0,长期:0};questions.forEach((q,i)=>{const tag=q.a[answers[i]][1];counts[tag]++;ds[q.d]+=({稳:88,暖:90,趣:86,界:84,直:87,智:89}[tag])});const ranked=Object.entries(counts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));const top=ranked[0][0],second=ranked[1][0],p=profile[top];const seed=answers.reduce((n,x,i)=>n+(x+1)*(i+3),0);const mbti=p.mbti[seed%p.mbti.length],z=p.z[(seed+counts[second])%p.z.length];const balance=ranked[0][1]-ranked.at(-1)[1];const score=Math.min(96,84+ranked[0][1]+Math.round((15-balance)/4));const picked=q=>questions[q].a[answers[q]][0];resultData={userName:$('#userNameInput').value.trim(),userAttr:`${$('#mbti').value} × ${$('#zodiac').value}`,targetType:`${mbti} × ${z}`,scoreNum:score,archetype:p.name,scoreLine:`你最看重“${p.name.replace('型','')}”，同时也需要${profile[second].name.replace('型','')}的加成。`,dims:Object.fromEntries(dims.map(d=>[d,Math.round(ds[d]/3)])),desc0:p.desc,desc1:`这不是凭空贴标签：你在“${picked(1)}”“${picked(8)}”等选择中，反复表现出对「${p.name.replace('型','')}」的偏好。`,desc2:`你们最容易卡住的地方，是把“${profile[second].name.replace('型','')}”当作理所当然。越重要的期待，越要说具体，而不是等对方猜。`,desc3:`下次约会试试：各自写下“最近最需要对方做的一件小事”，交换后只追问细节、不急着评价。你会更快确认这段关系是否真的舒服。`};saveAndRender()}
+function renderResult(d){resultData=d;$('#displayName').textContent=d.userName;$('#targetType').textContent=d.targetType;$('#archetype').textContent=`你的心动原型：${d.archetype}`;$('#scoreNum').textContent=d.scoreNum;$('#scoreRing').style.setProperty('--pct',`${d.scoreNum}%`);$('#scoreLine').textContent=d.scoreLine;$('#meters').innerHTML=dims.map(x=>`<div class="meter"><b>${dimNames[x].slice(0,2)}</b><span><i style="height:${d.dims?.[x]||85}%"></i></span><small>${d.dims?.[x]||85}</small></div>`).join('');const blocks=[['💗 你真正会被什么打动',d.desc0],['🔎 为什么会得出这个结果',d.desc1],['⚠️ 你们可能的关系盲区',d.desc2],['✨ 一件立刻能做的小事',d.desc3]];$('#insights').innerHTML=blocks.map(x=>`<article class="insight"><h3>${x[0]}</h3><p>${esc(x[1])}</p></article>`).join('');$('#intro').classList.add('hidden');$('#quiz').classList.add('hidden');$('#result').classList.remove('hidden');showApp();scrollTo({top:0,behavior:'smooth'})}
+async function saveAndRender(){const d=resultData;renderResult(d);if(client){try{await client.from('openlovetest').insert([{nickname:d.userName,mbti:$('#mbti').value,constellation:$('#zodiac').value,target_type:`${d.targetType} (${d.scoreNum}%)`,combined_result:`【关系原型】${d.archetype}\n【核心画像】${d.desc0}\n【结果依据】${d.desc1}\n【关系盲区】${d.desc2}\n【行动建议】${d.desc3}`,clicked_surprise:false}])}catch(e){}}}
+function shareText(){return `${resultData.userName} 的心动关系画像是「${resultData.archetype}」\n最适合：${resultData.targetType}\n适配指数：${resultData.scoreNum}%\n\n${resultData.scoreLine}\n你也来测测：${location.href}`}
+$('#copyBtn').onclick=async()=>{await navigator.clipboard.writeText(shareText());toast('结果文案已复制')};$('#shareBtn').onclick=async()=>{const data={title:'我的心动关系画像',text:shareText(),url:location.href};if(navigator.share){try{await navigator.share(data)}catch(e){}}else{$('#copyBtn').click()}};
+$('#againBtn').onclick=()=>{answers.fill(null);index=0;resultData=null;$('#result').classList.add('hidden');$('#intro').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'})};
+function boot(){showApp()}
+boot();
 </script>
 </body>
 </html>
