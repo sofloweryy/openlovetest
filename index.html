@@ -186,11 +186,10 @@ async function buildPoster(){
   g.fillStyle='#5f5865';g.font='500 31px sans-serif';wrapCanvasText(g,heartLines[topKey],150,735,780,49,3);
   g.fillStyle='#29242e';g.font='800 25px sans-serif';g.fillText('我的理想型同款阵容',150,925);
   g.fillStyle='#786f7c';g.font='500 22px sans-serif';g.fillText(f.zodiac+'：'+f.zodiacList.slice(0,2).join('、'),150,970);g.fillText(f.mbti+'：'+f.mbtiList.slice(0,2).join('、'),150,1010);
-  g.fillStyle='#f7eef5';rounded(g,150,1060,780,210,30);g.fillStyle='#d55380';g.font='800 20px sans-serif';g.fillText('同频匹配已开启',195,1105);
-  g.fillStyle='#29242e';g.font='800 29px sans-serif';g.fillText('你和我会双向适配吗？',195,1150);
-  g.fillStyle='#7b7480';g.font='500 21px sans-serif';g.fillText('扫码测结果，加入同频匹配',195,1192);
+  g.fillStyle='#f7eef5';rounded(g,150,1060,780,210,30);
+  g.fillStyle='#29242e';g.font='800 31px sans-serif';g.fillText('测测我们有多配',195,1125);
+  g.fillStyle='#d55380';g.font='700 21px sans-serif';g.fillText('扫码加入心动匹配',195,1172);
   const qr=document.createElement('canvas');if(window.QRCode?.toCanvas){await QRCode.toCanvas(qr,location.origin,{width:170,margin:2,color:{dark:'#29242e',light:'#ffffff'}});g.fillStyle='#fff';rounded(g,720,1080,180,180,18);g.drawImage(qr,725,1085,170,170)}
-  g.fillStyle='#a29aa6';g.font='500 17px sans-serif';g.fillText('人物类型来自网络常见讨论，非官方认证',150,1320);
   return c.toDataURL('image/png')
 }
 async function guaranteeQr(posterUrl){const [poster,qr]=await Promise.all([loadImage(posterUrl),loadImage(QR_DATA)]);const c=document.createElement('canvas');c.width=1080;c.height=1440;const g=c.getContext('2d');g.drawImage(poster,0,0);g.fillStyle='#fff';g.beginPath();g.roundRect(720,1080,180,180,18);g.fill();g.drawImage(qr,725,1085,170,170);return c.toDataURL('image/png')}
