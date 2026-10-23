@@ -46,9 +46,12 @@
     .contact-card{position:relative;color:#4d414b;background:#fff8f2;border:1px solid #f1e5df;box-shadow:0 13px 30px rgba(136,98,115,.09);border-radius:24px;overflow:hidden}.contact-card:before,.contact-card:after{content:"✿";position:absolute;color:#efadc0;font-size:22px;opacity:.55;animation:heartFloat 4.4s ease-in-out infinite}.contact-card:before{left:17px;top:14px}.contact-card:after{content:"✦";right:18px;bottom:14px;color:#a6cfbd;animation-delay:-1.6s}.contact-card p{color:#85747d}.contact-card button{position:relative;background:#f8e6ed;color:#a64268;width:auto;min-width:240px;padding:11px 22px;border:1px solid #f2d3df;border-radius:999px}
     .sharebox{align-items:center;grid-template-columns:minmax(0,1fr) auto}.sharebox .primary{padding:12px 18px}.sharebox .secondary{padding:12px 18px;white-space:nowrap}
     .modal-card .primary{background:linear-gradient(135deg,#e86f98,#c95f8f);box-shadow:0 9px 22px rgba(208,91,139,.2);border-radius:999px}.match-actions{display:grid;grid-template-columns:minmax(0,1fr) 108px;gap:9px;align-items:center}.match-actions .primary,.match-actions .secondary{width:100%;margin:0!important;padding:12px 10px;border-radius:999px}.match-actions .secondary{font-size:13px}
-    @keyframes softBreath{0%,100%{transform:translateY(0);box-shadow:0 13px 30px rgba(161,122,159,.09)}50%{transform:translateY(-3px);box-shadow:0 18px 38px rgba(161,122,159,.14)}}@keyframes heartFloat{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -5px;rotate:3deg}}
-    @media(prefers-reduced-motion:reduce){.doodle,.match-card,.match-card:after,.contact-card:before,.contact-card:after{animation:none!important}.primary,.answer{transition:none!important}}
+    .primary{background:linear-gradient(135deg,#ec769f,#c9689c);box-shadow:0 9px 22px rgba(208,91,139,.22);border-radius:999px}.primary:hover{box-shadow:0 12px 26px rgba(208,91,139,.28)}
+    .pulse-icon{display:inline-block;transform-origin:center;animation:iconBreath 2.8s ease-in-out infinite}.topline span:nth-child(2) .pulse-icon{animation-delay:-.9s}.topline span:nth-child(3) .pulse-icon{animation-delay:-1.8s}
+    @keyframes softBreath{0%,100%{transform:translateY(0);box-shadow:0 13px 30px rgba(161,122,159,.09)}50%{transform:translateY(-3px);box-shadow:0 18px 38px rgba(161,122,159,.14)}}@keyframes heartFloat{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -5px;rotate:3deg}}@keyframes iconBreath{0%,100%{transform:scale(1);filter:saturate(1)}50%{transform:scale(1.18);filter:saturate(1.35)}}
+    @media(prefers-reduced-motion:reduce){.doodle,.match-card,.match-card:after,.contact-card:before,.contact-card:after,.pulse-icon{animation:none!important}.primary,.answer{transition:none!important}}
     @media(max-width:480px){body{padding:8px 8px 18px;overflow-x:hidden}.shell{width:100%;min-height:calc(100svh - 26px);display:flex;flex-direction:column}.card{padding:20px 16px;border-radius:23px;max-width:100%;overflow:hidden}#app:has(#quiz:not(.hidden)){min-height:calc(100svh - 108px)}#quiz:not(.hidden){min-height:calc(100svh - 150px);display:flex;flex-direction:column}#quiz .nav{margin-top:auto}h1{font-size:30px;line-height:1.18;letter-spacing:-1px}.gradient{display:inline;overflow-wrap:anywhere}.topline{gap:4px;flex-wrap:wrap}.topline span{padding:5px 7px;font-size:10px}.two{grid-template-columns:1fr}.match-form .two{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.match-form .field label{font-size:12px}.match-form .field input,.match-form .field select{padding:11px 9px;font-size:13px}.question{padding-top:18px}.question h2{font-size:20px}.answer{padding:13px 12px}.nav{grid-template-columns:86px minmax(0,1fr)}.proof{gap:3px}.meter b{font-size:9px}.sharebox{grid-template-columns:minmax(0,1fr) auto;gap:8px}.sharebox .primary,.sharebox .secondary{font-size:12px;padding:11px 13px}.contact-card{padding:18px 12px}.contact-card h3{font-size:16px}.contact-card button{min-width:0;width:92%;font-size:13px}.footer{margin-top:auto;padding-top:14px}.modal{padding:10px}.modal-card{width:100%;padding:14px;max-height:96vh}.doodle{display:none}}
+    @media(max-width:480px){#app:has(#quiz:not(.hidden)){min-height:0}#quiz:not(.hidden){min-height:0;display:block}#quiz .nav{margin-top:18px}.quiz-head{padding:8px 0 10px}.question{padding:14px 0 0}.question h2{margin-bottom:14px}.answers{gap:8px}.answer{padding:12px}.nav .primary{padding:12px}.topline{margin-bottom:9px}}
   </style>
 </head>
 <body>
@@ -57,7 +60,7 @@
 <div class="doodle d3" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M13 49c15-30 39-35 54-15M20 59c16-22 32-25 45-13" fill="none" stroke="#72cdbd" stroke-width="4" stroke-linecap="round"/><circle cx="13" cy="49" r="4" fill="#72cdbd"/></svg></div>
 <div class="doodle d4" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M19 24c8-10 24-9 28 3 13-4 22 5 17 16-5 12-25 18-36 15-14-4-19-22-9-34Z" fill="none" stroke="#9a86df" stroke-width="4" stroke-dasharray="5 5" stroke-linecap="round"/></svg></div>
 <main class="shell">
-  <div class="topline"><span>💗 15 个心动瞬间</span><span>⏱ 3 分钟出结果</span><span>✨ 测完还能匹配同频 TA</span></div>
+  <div class="topline"><span><i class="pulse-icon">💗</i> 15 个心动瞬间</span><span><i class="pulse-icon">⏱</i> 3 分钟出结果</span><span><i class="pulse-icon">✨</i> 测完还能匹配同频 TA</span></div>
   <div id="loading" class="card loading">正在加载你的心动答案…</div>
   <section id="app" class="card hidden">
     <div id="intro">
@@ -181,14 +184,12 @@ async function buildPoster(){
     直:'不猜、不躲、把话说开，是我最喜欢的浪漫。',
     智:'比起寒暄，我更容易爱上能和我聊到灵魂深处的人。'
   };
-  const bg=g.createLinearGradient(0,0,1080,1440);bg.addColorStop(0,'#f3e8f5');bg.addColorStop(.52,'#fdebf1');bg.addColorStop(1,'#e5f5ef');g.fillStyle=bg;g.fillRect(0,0,1080,1440);
-  g.save();g.shadowColor='rgba(65,45,76,.18)';g.shadowBlur=45;g.shadowOffsetY=20;g.fillStyle='#fffdf8';g.beginPath();g.moveTo(146,72);g.quadraticCurveTo(112,75,104,105);g.quadraticCurveTo(91,120,98,145);g.lineTo(91,1268);g.quadraticCurveTo(89,1300,112,1312);g.quadraticCurveTo(122,1355,164,1362);g.lineTo(916,1368);g.quadraticCurveTo(955,1365,968,1334);g.quadraticCurveTo(996,1315,986,1278);g.lineTo(992,155);g.quadraticCurveTo(999,119,973,102);g.quadraticCurveTo(959,75,922,72);g.closePath();g.fill();g.restore();
+  g.clearRect(0,0,1080,1440);
+  g.save();g.fillStyle='#fffdf8';g.beginPath();g.moveTo(74,10);g.quadraticCurveTo(28,15,20,62);g.quadraticCurveTo(8,86,22,116);g.lineTo(14,1324);g.quadraticCurveTo(13,1378,62,1392);g.quadraticCurveTo(76,1425,126,1430);g.lineTo(958,1434);g.quadraticCurveTo(1020,1432,1034,1386);g.quadraticCurveTo(1072,1364,1058,1314);g.lineTo(1066,116);g.quadraticCurveTo(1074,62,1031,43);g.quadraticCurveTo(1010,12,954,10);g.closePath();g.fill();g.restore();
   for(let i=0;i<520;i++){const x=105+(i*73)%870,y=88+(i*137)%1260;g.fillStyle='rgba(104,88,103,.022)';g.fillRect(x,y,1.4,1.4)}
-  g.fillStyle='#eee8f2';g.beginPath();g.moveTo(895,72);g.lineTo(990,72);g.lineTo(990,165);g.quadraticCurveTo(954,111,895,72);g.fill();
-  g.fillStyle='#f1e7e9';g.beginPath();g.moveTo(90,1272);g.lineTo(90,1368);g.lineTo(188,1368);g.quadraticCurveTo(128,1335,90,1272);g.fill();
   g.save();g.globalAlpha=.72;g.font='42px sans-serif';g.fillStyle='#e6a8bd';g.fillText('♡',865,218);g.fillStyle='#b8a8e3';g.fillText('✦',875,700);g.fillStyle='#9fcfbd';g.fillText('⌁',126,835);g.font='34px sans-serif';g.fillStyle='#e9b66d';g.fillText('☀',858,875);g.fillStyle='#e8a8bc';g.fillText('♥',126,1110);g.fillStyle='#91c7b4';g.fillText('✿',872,1000);g.restore();
-  g.save();g.translate(410,55);g.rotate(-.035);g.fillStyle='rgba(247,211,139,.62)';rounded(g,0,0,260,54,5);g.restore();
-  g.save();g.strokeStyle='rgba(211,157,177,.45)';g.lineWidth=3;g.setLineDash([9,12]);g.beginPath();g.roundRect(122,105,838,1225,42);g.stroke();g.restore();
+  g.save();g.translate(410,4);g.rotate(-.035);g.fillStyle='rgba(247,211,139,.62)';rounded(g,0,0,260,54,5);g.restore();
+  g.save();g.strokeStyle='rgba(211,157,177,.45)';g.lineWidth=3;g.setLineDash([9,12]);g.beginPath();g.roundRect(42,38,996,1362,42);g.stroke();g.restore();
   g.textAlign='left';g.fillStyle='#8a7d91';g.font='600 22px sans-serif';g.fillText(d.userName+' 的心动答案',150,165);
   g.fillStyle='#29242e';g.font='800 41px sans-serif';g.fillText('适合我的人，原来是这种类型',150,245);
   g.fillStyle='#d85d86';g.font='900 82px sans-serif';g.fillText('「'+d.archetype+'」',142,365);
