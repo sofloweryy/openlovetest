@@ -238,7 +238,20 @@ $('#submitMatch').onclick=async()=>{
   }catch(e){console.error('match signup failed',e);toast('提交失败，请稍后再试')}
   finally{button.disabled=false;button.textContent='确认加入'}
 };
-function boot(){showApp()}
+function previewResult(){
+  $('#userNameInput').value='花花';$('#mbti').value='ENTP';$('#zodiac').value='白羊座';
+  renderResult({
+    userName:'花花',userAttr:'ENTP × 白羊座',targetType:'INTP × 水瓶座',scoreNum:94,archetype:'浪漫探索型',
+    scoreLine:'既能陪你探索世界，也能接住你偶尔的敏感，才是让你越相处越上头的人。',
+    needs:{稳:64,暖:74,趣:94,界:84,直:74,智:94},
+    needLabels:{稳:'安稳',暖:'共情',趣:'新鲜',界:'自由',直:'坦诚',智:'深聊'},
+    desc0:'你会被有趣、有想法又不黏人的人吸引。能陪你临时起意，也愿意认真听你天马行空，才真正踩中你的心动点。',
+    desc1:'你想要的不只是热闹，而是既有新鲜感，也能聊到一起、玩到一起的默契。',
+    desc2:'聊得来很容易让你迅速上头，但长期关系还要看对方是否稳定、真诚，并愿意把喜欢落到行动里。',
+    desc3:'别只看瞬间的火花，多观察对方能不能持续回应、尊重边界，也愿意和你一起解决问题。'
+  });
+}
+function boot(){new URLSearchParams(location.search).get('preview')==='1'?previewResult():showApp()}
 boot();
 </script>
 </body>
