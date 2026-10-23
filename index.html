@@ -74,6 +74,11 @@
     @keyframes wangchaiWiggle{0%,72%,100%{transform:rotate(0) scale(1)}78%{transform:rotate(-8deg) scale(1.06)}86%{transform:rotate(8deg) scale(1.06)}93%{transform:rotate(-4deg) scale(1)}}
     @media(max-width:480px){body{min-height:100svh;display:flex;align-items:center}.shell:has(#intro:not(.hidden)),.shell:has(#quiz:not(.hidden)){justify-content:center}.shell:has(#intro:not(.hidden)) #app,.shell:has(#quiz:not(.hidden)) #app{margin:auto 0}.question{touch-action:pan-y}.nav{grid-template-columns:88px 148px}.nav .primary{padding:11px 13px}#startBtn{min-width:210px}.modal-card{align-self:center}}
     @media(prefers-reduced-motion:reduce){#startBtn,.answer.selected:after,.answer.selected:before,#modal .wangchai,.question-in-right,.question-in-left{animation:none!important}}
+    /* 编辑式手机排版：自然向下展开，避免机械居中 */
+    .contact-card .wangchai{animation:wangchaiPeek 2.8s cubic-bezier(.2,.8,.25,1) infinite;transform-origin:50% 80%}
+    @keyframes wangchaiPeek{0%,68%,100%{transform:translateY(0) rotate(0) scale(1);filter:drop-shadow(0 0 0 rgba(223,99,145,0))}76%{transform:translateY(-3px) rotate(-9deg) scale(1.08)}84%{transform:translateY(-2px) rotate(8deg) scale(1.08);filter:drop-shadow(0 4px 7px rgba(223,99,145,.22))}92%{transform:translateY(0) rotate(-3deg) scale(1.02)}}
+    @media(max-width:480px){body{display:block;align-items:initial;padding-top:8px}.shell:has(#intro:not(.hidden)),.shell:has(#quiz:not(.hidden)){justify-content:flex-start}.shell:has(#intro:not(.hidden)) #app,.shell:has(#quiz:not(.hidden)) #app{margin:0}.topline{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;padding:1px 3px 5px;scrollbar-width:none}.topline::-webkit-scrollbar{display:none}.topline span{flex:0 0 auto}#intro h1{text-align:left;margin:8px 0 13px}#intro .lead{text-align:left;margin-left:0}#intro .trust{justify-content:flex-start;margin-bottom:20px}#startBtn{margin:18px 0 0 auto}.nav{justify-content:end}.card{margin-top:4px}}
+    @media(prefers-reduced-motion:reduce){.contact-card .wangchai{animation:none!important}}
   </style>
 </head>
 <body>
@@ -207,7 +212,7 @@ function tornPaperPath(ctx,x,y,w,h){
 }
 async function buildPoster(){
   const d=resultData,f=figureMatch(d),c=document.createElement('canvas');
-  c.width=2160;c.height=2880;
+  c.width=2160;c.height=3840;
   const g=c.getContext('2d');g.scale(2,2);const heartLines={
     稳:'比起嘴上说爱，我更想要稳稳落地的偏爱。',
     暖:'我想要的心动，是被看见、被理解，也被温柔接住。',
@@ -217,36 +222,31 @@ async function buildPoster(){
     智:'比起寒暄，我更容易爱上能和我聊到灵魂深处的人。'
   };
   /* 透明画布 + 真正不规则的毛边纸张，导出后四角保持透明 */
-  g.clearRect(0,0,1080,1440);
-  g.save();g.shadowColor='rgba(61,45,54,.24)';g.shadowBlur=34;g.shadowOffsetY=17;g.fillStyle='#fffaf2';tornPaperPath(g,45,34,990,1366);g.fill();g.restore();
-  g.save();tornPaperPath(g,45,34,990,1366);g.clip();
-  const posterBg=g.createLinearGradient(45,34,1035,1400);posterBg.addColorStop(0,'#fffaf3');posterBg.addColorStop(.5,'#fffdf9');posterBg.addColorStop(1,'#f0f8f3');g.fillStyle=posterBg;g.fillRect(35,24,1010,1386);
+  g.clearRect(0,0,1080,1920);
+  g.save();g.shadowColor='rgba(61,45,54,.22)';g.shadowBlur=34;g.shadowOffsetY=17;g.fillStyle='#fffaf2';tornPaperPath(g,45,34,990,1848);g.fill();g.restore();
+  g.save();tornPaperPath(g,45,34,990,1848);g.clip();
+  const posterBg=g.createLinearGradient(45,34,1035,1882);posterBg.addColorStop(0,'#fffaf3');posterBg.addColorStop(.5,'#fffdf9');posterBg.addColorStop(1,'#eef8f3');g.fillStyle=posterBg;g.fillRect(35,24,1010,1868);
   /* 纸浆纤维与轻微折痕，不影响正文可读性 */
-  g.save();g.globalAlpha=.18;for(let i=0;i<720;i++){const x=55+(i*83)%970,y=42+(i*149)%1350,len=2+(i%5);g.strokeStyle=i%3?'#bcaea1':'#d9c4b5';g.lineWidth=.65;g.beginPath();g.moveTo(x,y);g.lineTo(x+len,y+((i%3)-1));g.stroke()}g.restore();
-  g.save();g.globalAlpha=.055;g.strokeStyle='#8b7881';g.lineWidth=2;g.beginPath();g.moveTo(69,745);g.bezierCurveTo(310,728,692,775,1017,744);g.stroke();g.beginPath();g.moveTo(565,46);g.bezierCurveTo(548,370,589,940,563,1387);g.stroke();g.restore();
-  g.save();g.globalAlpha=.5;g.fillStyle='#f5dce7';g.beginPath();g.arc(1040,80,235,0,Math.PI*2);g.fill();g.fillStyle='#dcefe7';g.beginPath();g.arc(35,1375,250,0,Math.PI*2);g.fill();g.fillStyle='#e7e0f4';g.beginPath();g.arc(1090,1320,170,0,Math.PI*2);g.fill();g.restore();
-  for(let i=0;i<520;i++){const x=105+(i*73)%870,y=88+(i*137)%1260;g.fillStyle='rgba(104,88,103,.022)';g.fillRect(x,y,1.4,1.4)}
-  g.save();g.globalAlpha=.72;g.font='42px sans-serif';g.fillStyle='#e6a8bd';g.fillText('♡',865,218);g.fillStyle='#b8a8e3';g.fillText('✦',875,700);g.fillStyle='#9fcfbd';g.fillText('⌁',126,835);g.font='34px sans-serif';g.fillStyle='#e9b66d';g.fillText('☀',858,875);g.fillStyle='#e8a8bc';g.fillText('♥',126,1110);g.fillStyle='#91c7b4';g.fillText('✿',872,1000);g.restore();
-  g.textAlign='left';g.fillStyle='#8a7d91';g.font='600 22px sans-serif';g.fillText(d.userName+' 的心动答案',150,165);
-  g.fillStyle='#29242e';g.font='800 41px sans-serif';g.fillText('适合我的人，原来是这种类型',150,245);
-  g.fillStyle='#d85d86';g.font='900 82px sans-serif';g.fillText('「'+d.archetype+'」',142,365);
-  g.fillStyle='#716977';g.font='600 29px sans-serif';g.fillText(d.targetType+' · '+d.scoreNum+'% 适配',150,430);
+  g.save();g.globalAlpha=.16;for(let i=0;i<920;i++){const x=55+(i*83)%970,y=42+(i*149)%1820,len=2+(i%5);g.strokeStyle=i%3?'#bcaea1':'#d9c4b5';g.lineWidth=.65;g.beginPath();g.moveTo(x,y);g.lineTo(x+len,y+((i%3)-1));g.stroke()}g.restore();
+  g.save();g.globalAlpha=.48;g.fillStyle='#f4dce6';g.beginPath();g.arc(1042,68,235,0,Math.PI*2);g.fill();g.fillStyle='#dcefe7';g.beginPath();g.arc(30,1830,270,0,Math.PI*2);g.fill();g.restore();
+  g.textAlign='left';g.fillStyle='#967f8b';g.font='700 24px sans-serif';g.fillText('LOVE TYPE · '+d.userName,132,150);
+  g.fillStyle='#29242e';g.font='800 46px sans-serif';g.fillText('适合我的人，原来是',132,245);
+  g.fillStyle='#d85d86';g.font='italic 900 92px "Songti SC","STSong",serif';g.fillText(d.archetype,126,365);
+  g.fillStyle='#716977';g.font='650 31px sans-serif';g.fillText(d.targetType,135,438);
+  g.fillStyle='#f6e8ef';g.beginPath();g.arc(870,390,82,0,Math.PI*2);g.fill();g.textAlign='center';g.fillStyle='#c64f79';g.font='900 48px sans-serif';g.fillText(d.scoreNum+'%',870,390);g.font='700 17px sans-serif';g.fillText('心动适配度',870,425);
   const allNeeds=['稳','暖','界','直','趣','智'],topKey=allNeeds.slice().sort((a,b)=>d.needs[b]-d.needs[a])[0];
   const needColors=[['#fbf1f5','#a94768'],['#eef7f3','#4d7566'],['#f1eef9','#66588f'],['#f8f1ec','#986a4c'],['#fff0f4','#c24e77'],['#eef1fa','#586c9b']];
-  allNeeds.forEach((k,i)=>{const col=i%3,row=Math.floor(i/3),x=150+col*260,y=480+row*78,[bgc,fgc]=needColors[i],score=d.needs[k]||0;g.fillStyle=bgc;rounded(g,x,y,238,62,18);g.fillStyle=fgc;g.textAlign='left';g.font='700 22px sans-serif';g.fillText(d.needLabels[k],x+17,y+28);g.textAlign='right';g.font='800 21px sans-serif';g.fillText(score,x+220,y+28);g.fillStyle='rgba(80,68,86,.09)';rounded(g,x+17,y+42,204,6,3);g.fillStyle=fgc;rounded(g,x+17,y+42,Math.max(12,204*score/100),6,3)});
-  g.textAlign='left';g.fillStyle='#29242e';g.font='800 30px sans-serif';g.fillText('我的心动开关',150,675);
-  g.fillStyle='#5f5865';g.font='500 31px sans-serif';wrapCanvasText(g,heartLines[topKey],150,735,780,49,3);
-  g.fillStyle='#29242e';g.font='800 25px sans-serif';g.fillText('我的理想型同款阵容',150,925);
-  g.fillStyle='#786f7c';g.font='500 22px sans-serif';g.fillText(f.zodiac+'：'+f.zodiacList.slice(0,2).join('、'),150,970);g.fillText(f.mbti+'：'+f.mbtiList.slice(0,2).join('、'),150,1010);
-  g.fillStyle='#f7eef5';rounded(g,150,1060,780,210,30);
-  g.fillStyle='#29242e';g.font='800 31px sans-serif';g.fillText('💞 测测我们有多配',195,1125);
-  g.fillStyle='#d55380';g.font='700 21px sans-serif';g.fillText('✨ 扫码加入心动匹配',195,1172);
-  const qr=document.createElement('canvas');if(window.QRCode?.toCanvas){await QRCode.toCanvas(qr,location.origin,{width:170,margin:2,color:{dark:'#29242e',light:'#ffffff'}});g.fillStyle='#fff';rounded(g,720,1080,180,180,18);g.drawImage(qr,725,1085,170,170)}
-  g.textAlign='center';g.fillStyle='#968d9a';g.font='600 18px sans-serif';g.fillText('love.zhaihuahua1701.com',540,1324);
+  g.fillStyle='#fff1f6';rounded(g,125,525,830,205,34);g.fillStyle='#d8658e';g.font='900 72px "Songti SC","STSong",serif';g.textAlign='left';g.fillText('“',158,608);g.fillStyle='#433b45';g.font='600 34px sans-serif';wrapCanvasText(g,heartLines[topKey],205,610,690,52,2);g.fillStyle='#9b7585';g.font='700 19px sans-serif';g.fillText('我的心动开关',205,690);
+  g.fillStyle='#29242e';g.font='850 31px sans-serif';g.fillText('我真正看重的 6 件事',132,825);
+  allNeeds.forEach((k,i)=>{const col=i%2,row=Math.floor(i/2),x=132+col*422,y=872+row*105,[bgc,fgc]=needColors[i],score=d.needs[k]||0;g.fillStyle=bgc;rounded(g,x,y,392,82,22);g.fillStyle=fgc;g.textAlign='left';g.font='750 25px sans-serif';g.fillText(d.needLabels[k],x+22,y+35);g.textAlign='right';g.font='900 24px sans-serif';g.fillText(score,x+366,y+35);g.fillStyle='rgba(80,68,86,.09)';rounded(g,x+22,y+56,344,7,4);g.fillStyle=fgc;rounded(g,x+22,y+56,Math.max(16,344*score/100),7,4)});
+  g.fillStyle='#eef7f3';rounded(g,125,1228,830,225,32);g.textAlign='left';g.fillStyle='#527568';g.font='800 19px sans-serif';g.fillText('IDEAL TYPE CLUB',165,1285);g.fillStyle='#29242e';g.font='850 31px sans-serif';g.fillText('你的理想型同款阵容',165,1334);g.fillStyle='#625b65';g.font='550 25px sans-serif';g.fillText(f.zodiac+' · '+f.zodiacList.slice(0,2).join('、'),165,1384);g.fillText(f.mbti+' · '+f.mbtiList.slice(0,2).join('、'),165,1424);
+  g.fillStyle='#f7eaf1';rounded(g,125,1512,830,245,34);g.fillStyle='#29242e';g.font='900 36px sans-serif';g.fillText('💞 你的心动答案，也许在这里',170,1585);g.fillStyle='#c7517d';g.font='750 24px sans-serif';g.fillText('扫码测试 · 加入同频匹配',170,1640);
+  const qr=document.createElement('canvas');if(window.QRCode?.toCanvas){await QRCode.toCanvas(qr,location.origin,{width:190,margin:2,color:{dark:'#29242e',light:'#ffffff'}});g.fillStyle='#fff';rounded(g,735,1538,196,196,20);g.drawImage(qr,738,1541,190,190)}
+  g.textAlign='center';g.fillStyle='#968d9a';g.font='650 21px sans-serif';g.fillText('love.zhaihuahua1701.com',540,1820);
   g.restore();
   return c.toDataURL('image/png')
 }
-async function guaranteeQr(posterUrl){const [poster,qr]=await Promise.all([loadImage(posterUrl),loadImage(QR_DATA)]);const c=document.createElement('canvas');c.width=poster.naturalWidth||2160;c.height=poster.naturalHeight||2880;const g=c.getContext('2d'),s=c.width/1080;g.drawImage(poster,0,0,c.width,c.height);g.fillStyle='#fff';g.beginPath();g.roundRect(720*s,1080*s,180*s,180*s,18*s);g.fill();g.imageSmoothingEnabled=false;g.drawImage(qr,725*s,1085*s,170*s,170*s);return c.toDataURL('image/png')}
+async function guaranteeQr(posterUrl){const [poster,qr]=await Promise.all([loadImage(posterUrl),loadImage(QR_DATA)]);const c=document.createElement('canvas');c.width=poster.naturalWidth||2160;c.height=poster.naturalHeight||3840;const g=c.getContext('2d'),s=c.width/1080;g.drawImage(poster,0,0,c.width,c.height);g.fillStyle='#fff';g.beginPath();g.roundRect(735*s,1538*s,196*s,196*s,20*s);g.fill();g.imageSmoothingEnabled=false;g.drawImage(qr,738*s,1541*s,190*s,190*s);return c.toDataURL('image/png')}
 $('#shareBtn').onclick=async()=>{$('#shareBtn').textContent='正在生成海报…';try{const url=await guaranteeQr(await buildPoster());$('#posterImage').src=url;$('#posterModal').classList.add('open')}finally{$('#shareBtn').textContent='生成我的专属结果海报'}};$('#closePoster').onclick=()=>$('#posterModal').classList.remove('open');$('#posterModal').onclick=e=>{if(e.target.id==='posterModal')e.currentTarget.classList.remove('open')};
 $('#againBtn').onclick=()=>{answers.fill(null);index=0;resultData=null;$('#result').classList.add('hidden');$('#intro').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'})};
 $('#contactBtn').onclick=async()=>{try{await navigator.clipboard.writeText('zhaihuahua88')}catch(e){}$('#modal').classList.add('open');toast('微信号 zhaihuahua88 已复制')};const copyWechat=async()=>{try{await navigator.clipboard.writeText('zhaihuahua88');toast('微信号已复制')}catch(e){toast('微信号：zhaihuahua88')}};$('#wechat').onclick=copyWechat;$('#copyWechat').onclick=copyWechat;$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};$('#submitNote').onclick=async()=>{const note=$('#userNote').value.trim();if(currentRecordId&&client){try{await client.from('openlovetest').update({clicked_surprise:true,user_note:note||null}).eq('id',currentRecordId)}catch(e){}}$('#modal').classList.remove('open');toast(note?'悄悄话收到啦':'微信号已复制')};
