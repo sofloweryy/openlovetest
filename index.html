@@ -181,6 +181,15 @@ async function saveAndRender(){const d=resultData;renderResult(d);if(client){try
 function shareText(){return `${resultData.userName} 的恋爱适配类型是「${resultData.archetype}」\n适合的另一半：${resultData.targetType}\n关系适配度：${resultData.scoreNum}%\n\n${resultData.scoreLine}\n测完还可以加入同频匹配：${location.href}`}
 function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
 function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){const chars=[...text];let line='',lines=[];for(const ch of chars){const test=line+ch;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=ch}else line=test}if(line)lines.push(line);lines.slice(0,maxLines).forEach((l,i)=>ctx.fillText(l+(i===maxLines-1&&lines.length>maxLines?'…':''),x,y+i*lineHeight));return Math.min(lines.length,maxLines)*lineHeight}
+function tornPaperPath(ctx,x,y,w,h){
+  const jitter=(n,side)=>Math.sin(n*.83+side*1.7)*5+Math.sin(n*2.17+side)*2.4;
+  ctx.beginPath();ctx.moveTo(x+18,y+5);
+  let n=0;for(let px=x+18;px<=x+w-18;px+=18,n++)ctx.lineTo(px,y+jitter(n,0));
+  ctx.lineTo(x+w-4,y+17);n=0;for(let py=y+18;py<=y+h-18;py+=18,n++)ctx.lineTo(x+w+jitter(n,1),py);
+  ctx.lineTo(x+w-18,y+h-3);n=0;for(let px=x+w-18;px>=x+18;px-=18,n++)ctx.lineTo(px,y+h+jitter(n,2));
+  ctx.lineTo(x+3,y+h-18);n=0;for(let py=y+h-18;py>=y+18;py-=18,n++)ctx.lineTo(x+jitter(n,3),py);
+  ctx.closePath();
+}
 async function buildPoster(){
   const d=resultData,f=figureMatch(d),c=document.createElement('canvas');
   c.width=1080;c.height=1440;
@@ -192,7 +201,14 @@ async function buildPoster(){
     直:'不猜、不躲、把话说开，是我最喜欢的浪漫。',
     智:'比起寒暄，我更容易爱上能和我聊到灵魂深处的人。'
   };
-  const posterBg=g.createLinearGradient(0,0,1080,1440);posterBg.addColorStop(0,'#fff9f3');posterBg.addColorStop(.48,'#fffdf9');posterBg.addColorStop(1,'#f1faf6');g.fillStyle=posterBg;g.fillRect(0,0,1080,1440);
+  /* 透明画布 + 真正不规则的毛边纸张，导出后四角保持透明 */
+  g.clearRect(0,0,1080,1440);
+  g.save();g.shadowColor='rgba(61,45,54,.24)';g.shadowBlur=34;g.shadowOffsetY=17;g.fillStyle='#fffaf2';tornPaperPath(g,45,34,990,1366);g.fill();g.restore();
+  g.save();tornPaperPath(g,45,34,990,1366);g.clip();
+  const posterBg=g.createLinearGradient(45,34,1035,1400);posterBg.addColorStop(0,'#fffaf3');posterBg.addColorStop(.5,'#fffdf9');posterBg.addColorStop(1,'#f0f8f3');g.fillStyle=posterBg;g.fillRect(35,24,1010,1386);
+  /* 纸浆纤维与轻微折痕，不影响正文可读性 */
+  g.save();g.globalAlpha=.18;for(let i=0;i<720;i++){const x=55+(i*83)%970,y=42+(i*149)%1350,len=2+(i%5);g.strokeStyle=i%3?'#bcaea1':'#d9c4b5';g.lineWidth=.65;g.beginPath();g.moveTo(x,y);g.lineTo(x+len,y+((i%3)-1));g.stroke()}g.restore();
+  g.save();g.globalAlpha=.055;g.strokeStyle='#8b7881';g.lineWidth=2;g.beginPath();g.moveTo(69,745);g.bezierCurveTo(310,728,692,775,1017,744);g.stroke();g.beginPath();g.moveTo(565,46);g.bezierCurveTo(548,370,589,940,563,1387);g.stroke();g.restore();
   g.save();g.globalAlpha=.5;g.fillStyle='#f5dce7';g.beginPath();g.arc(1040,80,235,0,Math.PI*2);g.fill();g.fillStyle='#dcefe7';g.beginPath();g.arc(35,1375,250,0,Math.PI*2);g.fill();g.fillStyle='#e7e0f4';g.beginPath();g.arc(1090,1320,170,0,Math.PI*2);g.fill();g.restore();
   for(let i=0;i<520;i++){const x=105+(i*73)%870,y=88+(i*137)%1260;g.fillStyle='rgba(104,88,103,.022)';g.fillRect(x,y,1.4,1.4)}
   g.save();g.globalAlpha=.72;g.font='42px sans-serif';g.fillStyle='#e6a8bd';g.fillText('♡',865,218);g.fillStyle='#b8a8e3';g.fillText('✦',875,700);g.fillStyle='#9fcfbd';g.fillText('⌁',126,835);g.font='34px sans-serif';g.fillStyle='#e9b66d';g.fillText('☀',858,875);g.fillStyle='#e8a8bc';g.fillText('♥',126,1110);g.fillStyle='#91c7b4';g.fillText('✿',872,1000);g.restore();
@@ -212,6 +228,7 @@ async function buildPoster(){
   g.fillStyle='#d55380';g.font='700 21px sans-serif';g.fillText('✨ 扫码加入心动匹配',195,1172);
   const qr=document.createElement('canvas');if(window.QRCode?.toCanvas){await QRCode.toCanvas(qr,location.origin,{width:170,margin:2,color:{dark:'#29242e',light:'#ffffff'}});g.fillStyle='#fff';rounded(g,720,1080,180,180,18);g.drawImage(qr,725,1085,170,170)}
   g.textAlign='center';g.fillStyle='#968d9a';g.font='600 18px sans-serif';g.fillText('love.zhaihuahua1701.com',540,1324);
+  g.restore();
   return c.toDataURL('image/png')
 }
 async function guaranteeQr(posterUrl){const [poster,qr]=await Promise.all([loadImage(posterUrl),loadImage(QR_DATA)]);const c=document.createElement('canvas');c.width=1080;c.height=1440;const g=c.getContext('2d');g.drawImage(poster,0,0);g.fillStyle='#fff';g.beginPath();g.roundRect(720,1080,180,180,18);g.fill();g.drawImage(qr,725,1085,170,170);return c.toDataURL('image/png')}
