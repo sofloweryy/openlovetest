@@ -188,12 +188,13 @@
         <div class="field"><label for="matchCity">所在城市</label><input id="matchCity" maxlength="50" placeholder="例如：上海"></div>
       </div>
       <div class="field"><label for="matchWechat">你的微信</label><input id="matchWechat" maxlength="100" autocomplete="off" placeholder="仅在匹配成功后联系你"></div>
+      <div class="field"><label for="matchEmail">联系邮箱（选填）</label><input id="matchEmail" type="email" inputmode="email" maxlength="254" autocomplete="email" placeholder="例如：hello@example.com"></div>
       <label class="consent-row"><input type="checkbox" id="matchConsent"><span>我同意参与匹配；联系方式仅在双方同意后提供。</span></label>
       <div class="match-error hidden" id="matchError" role="alert"></div>
       <div class="match-actions"><button class="primary" id="submitMatch">确认加入</button><button class="secondary" id="closeMatch">暂时不了</button></div>
     </div>
   </div>
-  <div class="match-success hidden" id="matchSuccess"><div class="success-icon">💌</div><h3>已经加入匹配池</h3><p>如果遇到彼此符合的人，我会先来问你的意愿。你的微信不会直接展示给其他用户。</p><button class="primary" id="matchDone">知道啦</button></div>
+  <div class="match-success hidden" id="matchSuccess"><div class="success-icon">💌</div><h3>已经加入匹配池</h3><p>如果遇到彼此符合的人，我会先来问你的意愿。你的联系方式不会直接展示给其他用户。</p><button class="primary" id="matchDone">知道啦</button></div>
 </div></div>
 <div class="toast" id="toast">已复制</div>
 <script>
@@ -384,14 +385,18 @@ function clearMatchError(){
 }
 matchRequired.forEach(([selector])=>{const el=$(selector);el.addEventListener('input',clearMatchError);el.addEventListener('change',clearMatchError)});
 $('#matchConsent').addEventListener('change',clearMatchError);
+$('#matchEmail').addEventListener('input',clearMatchError);
 $('#submitMatch').onclick=async()=>{
-  const nickname=$('#matchNickname').value.trim(),gender=$('#matchGender').value,preferredGender=$('#matchPreferredGender').value,age=$('#matchAge').value,city=$('#matchCity').value.trim(),wechat=$('#matchWechat').value.trim();
+  const nickname=$('#matchNickname').value.trim(),gender=$('#matchGender').value,preferredGender=$('#matchPreferredGender').value,age=$('#matchAge').value,city=$('#matchCity').value.trim(),wechat=$('#matchWechat').value.trim(),email=$('#matchEmail').value.trim();
   clearMatchError();
   const missing=matchRequired.filter(([selector])=>!$(selector).value.trim());
   if(missing.length){
     missing.forEach(([selector])=>$(selector).classList.add('invalid'));
     const error=$('#matchError');error.textContent='还差：'+missing.map(([,label])=>label).join('、');error.classList.remove('hidden');
     missing[0][0]&&$(missing[0][0]).focus();error.scrollIntoView({behavior:'smooth',block:'center'});return
+  }
+  if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    const error=$('#matchError');$('#matchEmail').classList.add('invalid');error.textContent='邮箱格式好像不对，请检查一下';error.classList.remove('hidden');$('#matchEmail').focus();error.scrollIntoView({behavior:'smooth',block:'center'});return
   }
   if(!$('#matchConsent').checked){const error=$('#matchError');error.textContent='请先勾选匹配与隐私说明';error.classList.remove('hidden');document.querySelector('.consent-row').classList.add('invalid');error.scrollIntoView({behavior:'smooth',block:'center'});return}
   if(!client){toast('网络连接失败，请稍后再试');return}
@@ -400,7 +405,7 @@ $('#submitMatch').onclick=async()=>{
   try{
     const {error}=await client.from('match_profiles').insert([{
       nickname,group_name:$('#matchGroup').value.trim()||null,gender,age_range:age,city,preferred_gender:preferredGender,
-      self_mbti:$('#mbti').value,self_zodiac:$('#zodiac').value,desired_mbti:desiredMbti,desired_zodiac:desiredZodiac,wechat,consent:true,status:'active'
+      self_mbti:$('#mbti').value,self_zodiac:$('#zodiac').value,desired_mbti:desiredMbti,desired_zodiac:desiredZodiac,wechat,email:email||null,consent:true,status:'active'
     }]);
     if(error)throw error;
     $('#matchFormWrap').classList.add('hidden');$('#matchSuccess').classList.remove('hidden');toast('已加入同频匹配池');
