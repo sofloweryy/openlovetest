@@ -290,7 +290,7 @@ function calculate(){
   const answerCode=answers.join('');
   const seed=[...answerCode+selfMbti+selfZodiac].reduce((n,c,i)=>n+c.charCodeAt(0)*(i+3),0);
   const target=fitTargetType(needs,selfMbti,selfZodiac),mbti=target.mbti,z=target.zodiac;
-  const confidence=Math.max(0,Math.min(8,Math.round((needs[top]-needs[third=ranked[2]])/2)));
+  const third=ranked[2],confidence=Math.max(0,Math.min(8,Math.round((needs[top]-needs[third])/2)));
   const score=Math.min(96,Math.max(78,Math.round(76+(needs[top]+needs[second]-120)*.22+confidence)));
   const needLabels={稳:'安稳',暖:'共情',趣:'新鲜',界:'自由',直:'坦诚',智:'深聊'};
   const pairKey=[top,second].sort((a,b)=>keys.indexOf(a)-keys.indexOf(b)).join('|');
