@@ -207,24 +207,43 @@ function loadImage(src){return new Promise((resolve,reject)=>{const img=new Imag
 const pathParts=location.pathname.split('/').filter(Boolean);const currentCode=pathParts.at(-1)||'';
 const dims=['节奏','共情','边界','表达','长期'];
 const dimNames={节奏:'约会日常',共情:'难过的时候',边界:'亲密距离',表达:'心动表达',长期:'未来搭子'};
-const questions=[
-{d:'节奏',q:'理想的周末约会，你更想怎么过？',a:[['提前商量好路线，舒服又高效','稳'],['定个方向，边走边发现惊喜','趣'],['去哪不重要，黏在一起就很好','暖'],['各自充电，晚点再一起吃饭','界']]},
-{d:'共情',q:'你带着坏情绪回家，最希望 TA 的第一反应是？',a:[['先抱抱我，告诉我“我在”','暖'],['听我说完，再帮我理清问题','智'],['拉我出去吃点好的，换换心情','趣'],['问我想独处还是想陪伴','界']]},
-{d:'边界',q:'发生分歧时，哪种处理方式最让你安心？',a:[['趁热坦白说开，但不互相攻击','直'],['都冷静一下，约定稍后再聊','界'],['先照顾彼此情绪，再讨论对错','暖'],['把事实和方案摆出来解决','智']]},
-{d:'节奏',q:'热门餐厅要排很久，你更欣赏 TA 怎么做？',a:[['陪我排队，等待也能聊得开心','暖'],['立刻找同水准的备选餐厅，不浪费时间','稳'],['先取号，再去附近随便逛逛','趣'],['先问我的想法，再一起决定','界']]},
-{d:'表达',q:'哪一种日常，最像你心里的“被爱”？',a:[['有说不完的话，也愿意分享小事','暖'],['安静待在同一空间也不尴尬','界'],['偶尔准备惊喜，保持心动感','趣'],['遇到现实问题时能并肩处理','稳']]},
-{d:'边界',q:'恋爱里的报备，你认同哪一种？',a:[['重要行程主动说，让彼此放心','稳'],['彼此信任，不必事无巨细汇报','界'],['提前说清异性交往边界即可','直'],['共享大致日程，方便安排相处','暖']]},
-{d:'表达',q:'收到哪种生日礼物，你会真正记很久？',a:[['我正需要、而且对方留意到了的东西','稳'],['亲手做的、带着专属记忆的礼物','暖'],['一次没体验过的旅行或活动','趣'],['直接问我想要什么，精准送到心坎','直']]},
-{d:'节奏',q:'期待很久的旅行临时取消，你希望你们？',a:[['迅速制定一个同样不错的 B 计划','稳'],['顺势宅家，把意外过成小假期','界'],['允许失落，先互相安慰一下','暖'],['临时起意，去做另一件新鲜事','趣']]},
-{d:'长期',q:'哪种特质最容易让你产生长期好感？',a:[['靠谱、有担当，说到做到','稳'],['有趣、有创造力，总能打开新世界','趣'],['细腻、会倾听，让人敢做自己','暖'],['独立、有想法，彼此互相启发','智']]},
-{d:'共情',q:'你情绪低落又不想说话时，希望 TA？',a:[['安静陪着，给我一个拥抱','暖'],['尊重沉默，等我主动开口','界'],['用具体行动照顾好我的生活','稳'],['温柔提问，帮我看清情绪来源','智']]},
-{d:'边界',q:'关于公开恋情，你更舒服的方式是？',a:[['大方公开，让关系有确定感','直'],['偶尔分享，不把生活变成表演','暖'],['尊重双方隐私，是否公开都可以','界'],['重要节点公开，日常低调经营','稳']]},
-{d:'共情',q:'对方很久没回消息时，你最希望真实情况是？',a:[['忙完主动解释，也给我一个交代','稳'],['提前说一声，让我不用猜','直'],['我们都不需要靠秒回来证明爱','界'],['回来后认真回应我刚才说的事','暖']]},
-{d:'长期',q:'你认为健康关系最核心的能力是？',a:[['承诺稳定，困难时也不轻易离开','稳'],['坦诚沟通，问题不靠猜','直'],['理解差异，给彼此空间','界'],['持续好奇，一起创造新体验','趣']]},
-{d:'长期',q:'谈到共同财务，你更认同？',a:[['设共同目标，也保留各自账户','界'],['一起做预算，让未来看得见','稳'],['重要原则说清，其他灵活处理','直'],['钱也要用来创造值得记住的体验','趣']]},
-{d:'表达',q:'如果只能选一个，你最想要怎样的灵魂伴侣？',a:[['让我安心落地的长期队友','稳'],['真正懂我情绪的温柔同盟','暖'],['和我探索世界的有趣搭子','趣'],['尊重独立、又能深度对话的知己','智']]}
-];
+const questions=[{"d":"安全感","q":"一整天都很忙，TA 没怎么回消息。你最希望晚些时候收到什么？","a":[["一句简单说明，再认真接住我们没聊完的话","稳",{"稳":3,"暖":1,"直":2}],["忙完直接打来，听到声音就安心了","暖",{"暖":3,"稳":1,"直":1}],["不用解释太多，各忙各的也不会怀疑感情","界",{"界":3,"稳":1}],["坦白说今天发生了什么，别让我靠猜","直",{"直":3,"稳":2}]]},{"d":"情绪回应","q":"你状态很差，却连自己都说不清原因。TA 怎么做最加分？","a":[["先抱抱我，不催我立刻振作","暖",{"暖":3,"稳":1}],["陪我把情绪和问题慢慢理清","智",{"智":3,"暖":2}],["替我处理一件眼前的小麻烦","稳",{"稳":3,"暖":1}],["问我想被陪着，还是想先独处","界",{"界":3,"暖":2,"直":1}]]},{"d":"边界","q":"你们都很忙，一个周末终于同时有空。你更舒服的安排是？","a":[["提前定好一件两个人都期待的事","稳",{"稳":3,"趣":1}],["留半天约会，另外半天各自充电","界",{"界":3,"稳":1}],["临时出发，去哪儿边走边决定","趣",{"趣":3,"界":1}],["窝在一起，哪怕什么都不做也很好","暖",{"暖":3,"稳":1}]]},{"d":"冲突修复","q":"争执正在升温，你最希望 TA 怎么处理？","a":[["先停二十分钟，但明确说好几点回来继续谈","界",{"界":2,"稳":2,"直":2}],["先确认彼此不是敌人，再讨论谁对谁错","暖",{"暖":3,"直":1}],["把真正不满一次说清，不翻旧账","直",{"直":3,"智":1}],["先找出能立刻解决的那一部分","稳",{"稳":3,"直":1}]]},{"d":"冲突修复","q":"TA 做错了一件让你失望的事，哪种道歉最能让你重新相信？","a":[["准确说出错在哪里，而不是只说“对不起”","智",{"智":2,"直":3}],["马上采取补救行动，并且之后不再重犯","稳",{"稳":3,"直":1}],["先理解这件事为什么真的伤到我","暖",{"暖":3,"智":1}],["给我一点消化时间，不逼我马上原谅","界",{"界":3,"暖":1}]]},{"d":"关系边界","q":"TA 和异性朋友关系很好，你真正需要的安全感来自哪里？","a":[["彼此把边界说清楚，并且言行一致","直",{"直":3,"稳":2}],["TA 会主动让我进入真实的社交圈","暖",{"暖":2,"稳":2}],["相信彼此，不靠查手机维持关系","界",{"界":3,"稳":1}],["遇到让我不舒服的细节，愿意一起分析和调整","智",{"智":2,"直":2,"暖":1}]]},{"d":"长期共建","q":"谈到共同财务，哪种方式最让你踏实？","a":[["共同目标一起存，各自也保留能自由支配的钱","界",{"界":2,"稳":3}],["收入和支出尽量透明，大事一起做决定","直",{"直":2,"稳":3}],["不必算得太细，但困难时愿意互相托底","暖",{"暖":2,"稳":2}],["钱不只用来过日子，也要一起体验世界","趣",{"趣":3,"稳":1}]]},{"d":"现实选择","q":"TA 得到一个很好的异地工作机会，你第一反应更接近？","a":[["先算清期限、成本和最后在哪里汇合","稳",{"稳":3,"智":1}],["机会难得，我支持 TA，也相信彼此能独立生活","界",{"界":3,"稳":1}],["先确认这段关系仍然被放进未来计划里","直",{"直":2,"稳":2,"暖":1}],["把它当成两个人打开新生活的机会","趣",{"趣":3,"界":1}]]},{"d":"日常共建","q":"长期住在一起后，家务和琐事怎么分最舒服？","a":[["按擅长程度固定分工，少靠临时提醒","稳",{"稳":3,"智":1}],["谁有空谁多做一点，但彼此看得见对方的付出","暖",{"暖":2,"稳":2}],["不舒服就直接提，规则可以随时重谈","直",{"直":3,"界":1}],["保留各自习惯，只把公共区域和底线说清楚","界",{"界":3,"直":1}]]},{"d":"共同成长","q":"关系进入平稳期后，什么最能让你继续心动？","a":[["一起学习新东西，交换最近改变自己的观点","智",{"智":3,"趣":2}],["隔一段时间解锁一次没体验过的事","趣",{"趣":3,"智":1}],["普通日子里依然记得回应和照顾","暖",{"暖":2,"稳":2}],["各自成长，再把新的自己带回关系里","界",{"界":2,"智":2,"趣":1}]]},{"d":"精神连接","q":"你们聊到一个彼此观点完全不同的话题，你最喜欢哪种状态？","a":[["可以认真辩论，但不会否定对方这个人","智",{"智":3,"直":2}],["先好奇对方为什么这样想","暖",{"暖":2,"智":2}],["观点不同没关系，互不改造就好","界",{"界":3,"智":1}],["聊完一起去做点有意思的事，不困在输赢里","趣",{"趣":2,"界":1,"暖":1}]]},{"d":"支持方式","q":"你正在做一件很想做、但成功率不高的事。最希望 TA 怎么支持？","a":[["和我一起拆计划，把风险变得可控","稳",{"稳":3,"智":2}],["相信我的判断，需要时再给建议","界",{"界":3,"智":1}],["陪我大胆试一次，失败也能变成故事","趣",{"趣":3,"暖":1}],["既鼓励我，也诚实指出 TA 看到的问题","直",{"直":2,"智":2,"暖":1}]]},{"d":"亲密表达","q":"哪一个瞬间最容易让你确认“这个人真的爱我”？","a":[["我随口提过的小事，TA 后来真的记得","暖",{"暖":3,"稳":2}],["遇到麻烦时，TA 没消失而是和我一起扛","稳",{"稳":3,"暖":1}],["我说出真实想法后，TA 没有敷衍或逃开","直",{"直":2,"智":2}],["TA 尊重我的选择，也不会用爱限制我","界",{"界":3,"暖":1}]]},{"d":"承诺","q":"真正让你愿意长期留下来的，最关键是什么？","a":[["重要承诺经得起时间验证","稳",{"稳":3,"直":1}],["脆弱和难堪都能被温柔接住","暖",{"暖":3,"智":1}],["我们一直有新的东西可以共同创造","趣",{"趣":3,"智":1}],["再亲密也能尊重彼此是独立的人","界",{"界":3,"稳":1}]]},{"d":"理想关系","q":"如果只能留下一个条件，你希望适合自己的另一半首先做到什么？","a":[["让我不用反复确认，行动本身就有答案","稳",{"稳":3,"直":2}],["让我敢于示弱，也确信自己会被理解","暖",{"暖":3,"智":1}],["让我既保有自由，又愿意主动靠近","界",{"界":3,"暖":1}],["让我一直有话想聊，也不断看到新的世界","智",{"智":3,"趣":2}]]}];
 const profile={稳:{name:'稳定共建型',mbti:['ISTJ','ISFJ','ESTJ'],z:['金牛座','摩羯座','处女座'],desc:'你要的不是轰轰烈烈的承诺，而是把承诺落实在每一次准时、每一个计划和每个困难时刻。'},暖:{name:'温柔共情型',mbti:['INFJ','ENFJ','INFP'],z:['巨蟹座','双鱼座','天秤座'],desc:'你会被真正听懂你的人打动。TA 不急着纠正你的感受，而是先让你知道：在这段关系里，你可以放心做自己。'},趣:{name:'浪漫探索型',mbti:['ENFP','ENTP','ESFP'],z:['射手座','双子座','白羊座'],desc:'你需要的不只是恋人，也是能让生活不断长出新鲜感的搭档。你们因好奇靠近，也会在共同体验中越来越亲密。'},界:{name:'自由同频型',mbti:['INTJ','ISTP','INTP'],z:['水瓶座','天秤座','射手座'],desc:'你期待亲密，但不想失去自己。最适合你的人懂得靠近，也懂得留白；信任不是查岗，而是彼此都有选择留下的自由。'},直:{name:'坦诚并肩型',mbti:['ENTJ','ESTP','ENFJ'],z:['白羊座','狮子座','天蝎座'],desc:'你不怕关系里有问题，怕的是问题被隐藏。清晰表达、及时回应和共同解决，会让你比甜言蜜语更有安全感。'},智:{name:'深度知己型',mbti:['INTP','INFJ','INTJ'],z:['水瓶座','天蝎座','处女座'],desc:'你容易被有洞察力、能深聊的人吸引。真正的心动来自“TA 不只听见我的话，也理解我为何这样想”。'}};
+
+const pairArchetypes={
+  '稳|暖':'安心共感型','稳|趣':'稳定生长型','稳|界':'松弛共建型','稳|直':'靠谱坦诚型','稳|智':'深度共建型',
+  '暖|趣':'浪漫共鸣型','暖|界':'温柔留白型','暖|直':'真诚共情型','暖|智':'灵魂共感型',
+  '趣|界':'自由探索型','趣|直':'热烈坦诚型','趣|智':'好奇知己型',
+  '界|直':'清醒并肩型','界|智':'独立知己型','直|智':'坦诚深聊型'
+};
+const mbtiTypes=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
+const zodiacTraits={
+  '白羊座':{趣:3,直:3,界:1},'金牛座':{稳:3,暖:1,界:1},'双子座':{趣:3,智:2,界:1},'巨蟹座':{暖:3,稳:2},
+  '狮子座':{直:2,暖:2,趣:2},'处女座':{稳:3,智:2,直:1},'天秤座':{暖:2,界:2,智:1},'天蝎座':{暖:2,智:2,直:2},
+  '射手座':{趣:3,界:3,智:1},'摩羯座':{稳:3,直:2,智:1},'水瓶座':{界:3,智:3,趣:1},'双鱼座':{暖:3,趣:2,智:1}
+};
+function mbtiTraits(type){
+  const t={稳:1,暖:1,趣:1,界:1,直:1,智:1};
+  type[0]==='I'?(t.界+=2,t.智+=1):(t.暖+=1,t.趣+=1,t.直+=1);
+  type[1]==='N'?(t.智+=2,t.趣+=1):(t.稳+=2,t.暖+=1);
+  type[2]==='T'?(t.直+=2,t.智+=1):(t.暖+=2,t.稳+=1);
+  type[3]==='J'?(t.稳+=2,t.直+=1):(t.趣+=2,t.界+=1);
+  return t
+}
+function fitTargetType(needs,selfMbti,selfZodiac){
+  const keys=['稳','暖','趣','界','直','智'];
+  const candidates=mbtiTypes.map(type=>{
+    const traits=mbtiTraits(type);
+    const needFit=keys.reduce((sum,k)=>sum+(needs[k]-50)*traits[k],0);
+    const rhythmBonus=(type[1]===selfMbti[1]?18:0)+(type[3]===selfMbti[3]?10:0);
+    return {type,score:needFit+rhythmBonus}
+  }).sort((a,b)=>b.score-a.score||a.type.localeCompare(b.type));
+  const mbti=candidates[0].type;
+  const zodiac=Object.entries(zodiacTraits).map(([z,traits])=>({
+    z,score:keys.reduce((sum,k)=>sum+(needs[k]-50)*(traits[k]||0),0)+(z===selfZodiac?2:0)
+  })).sort((a,b)=>b.score-a.score||a.z.localeCompare(b.z))[0].z;
+  return {mbti,zodiac,fit:candidates[0].score,runnerUp:candidates[1].score}
+}
 const richCopy={
 稳:{extra:['你对“靠谱”的判断很具体：答应的事能做到，遇到麻烦不消失，未来能够一起商量。','比起一时上头，你更容易被持续投入打动。稳定在你这里不是无聊，而是可以放心交付自己。','你真正想确认的，是对方有没有把“我们”放进日常安排，而不只是嘴上说喜欢。'],blind:['你可能会把临时变化误读成不重视，也容易替两个人承担过多现实责任。','当计划感太强，偶尔会把恋爱过成项目管理；惊喜和松弛也值得留一点位置。'],act:['和对方各写一个未来三个月想共同完成的小目标，再确认谁负责第一步。','把“你要靠谱一点”换成具体请求：迟到提前说、重要决定一起商量、答应的事给出时间点。']},
 暖:{extra:['你会记得语气、眼神和那些没说完的话。能接住情绪的人，往往比条件完美的人更让你心动。','你要的共情不是无原则附和，而是对方愿意先理解你的感受，再一起处理问题。','当你确定脆弱不会被嘲笑，爱才真正开始。对你来说，被看见本身就是一种承诺。'],blind:['你可能因为太会体谅而推迟表达不满，最后一次性耗尽耐心。','情绪被接住很重要，但不能代替行动；温柔和解决问题最好同时存在。'],act:['下一次低落时直接告诉 TA：“现在先听我说，十分钟后再一起想办法。”','各自补完一句话：“当我沉默时，我真正希望你……”答案会比猜测有效。']},
@@ -254,21 +273,35 @@ $('#prevBtn').onclick=()=>{if(index===0){$('#quiz').classList.add('hidden');$('#
 $('#nextBtn').onclick=()=>{if(answers[index]===null){$('#quizError').classList.remove('hidden');return}if(index<14){index++;renderQuestion(1)}else calculate()};
 let quizTouchX=0;document.querySelector('.question').addEventListener('touchstart',e=>quizTouchX=e.changedTouches[0].clientX,{passive:true});document.querySelector('.question').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-quizTouchX;if(Math.abs(dx)<58)return;dx<0?$('#nextBtn').click():$('#prevBtn').click()},{passive:true});
 function calculate(){
-  const counts={稳:0,暖:0,趣:0,界:0,直:0,智:0};
-  questions.forEach((q,i)=>counts[q.a[answers[i]][1]]++);
-  const ranked=Object.entries(counts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
-  const top=ranked[0][0],second=ranked[1][0],third=ranked[2][0],p=profile[top];
+  const keys=['稳','暖','趣','界','直','智'];
+  const raw=Object.fromEntries(keys.map(k=>[k,0]));
+  const maxPossible=Object.fromEntries(keys.map(k=>[k,0]));
+  questions.forEach((q,i)=>{
+    const vector=q.a[answers[i]][2]||{[q.a[answers[i]][1]]:3};
+    keys.forEach(k=>{
+      raw[k]+=vector[k]||0;
+      maxPossible[k]+=Math.max(...q.a.map(option=>(option[2]||{})[k]||0));
+    })
+  });
+  const needs=Object.fromEntries(keys.map(k=>[k,Math.round(50+47*(raw[k]/Math.max(1,maxPossible[k])))]));
+  const ranked=keys.slice().sort((a,b)=>needs[b]-needs[a]||raw[b]-raw[a]||keys.indexOf(a)-keys.indexOf(b));
+  const top=ranked[0],second=ranked[1];
   const selfMbti=$('#mbti').value,selfZodiac=$('#zodiac').value;
   const answerCode=answers.join('');
-  const seed=[...answerCode+selfMbti+selfZodiac+$('#userNameInput').value.trim()].reduce((n,c,i)=>n+c.charCodeAt(0)*(i+3),0);
-  const mbti=p.mbti[seed%p.mbti.length],z=p.z[(seed+counts[second])%p.z.length];
-  const score=Math.min(97,80+counts[top]*2+Math.round(counts[second]*1.3));
+  const seed=[...answerCode+selfMbti+selfZodiac].reduce((n,c,i)=>n+c.charCodeAt(0)*(i+3),0);
+  const target=fitTargetType(needs,selfMbti,selfZodiac),mbti=target.mbti,z=target.zodiac;
+  const confidence=Math.max(0,Math.min(8,Math.round((needs[top]-needs[third=ranked[2]])/2)));
+  const score=Math.min(96,Math.max(78,Math.round(76+(needs[top]+needs[second]-120)*.22+confidence)));
   const needLabels={稳:'安稳',暖:'共情',趣:'新鲜',界:'自由',直:'坦诚',智:'深聊'};
-  const needs=Object.fromEntries(Object.entries(counts).map(([k,v])=>[k,Math.min(97,51+v*11+(seed%4))]));
-  const allEvidence=questions.map((q,i)=>({q:q.q,a:q.a[answers[i]][0],tag:q.a[answers[i]][1],i})).filter(x=>x.tag===top||x.tag===second);
-  const evidence=rotatePick(allEvidence,seed,2);
+  const pairKey=[top,second].sort((a,b)=>keys.indexOf(a)-keys.indexOf(b)).join('|');
+  const archetype=pairArchetypes[pairKey]||profile[top].name;
+  const allEvidence=questions.map((q,i)=>{
+    const vector=q.a[answers[i]][2]||{};
+    return {q:q.q,a:q.a[answers[i]][0],tag:q.a[answers[i]][1],weight:(vector[top]||0)+(vector[second]||0),i}
+  }).filter(x=>x.weight>0).sort((a,b)=>b.weight-a.weight||a.i-b.i);
+  const evidence=allEvidence.slice(0,2);
   const proof=evidence.map(x=>'「'+x.a.replace(/[。；，]$/,'')+'」').join('和');
-  const copy=richCopy[top],blind=copy.blind[Math.floor(seed/3)%copy.blind.length],act=copy.act[Math.floor(seed/7)%copy.act.length];
+  const copy=richCopy[top],blind=copy.blind[(raw[second]+seed)%copy.blind.length],act=copy.act[(raw[top]+raw[second])%copy.act.length];
   const topPraise={
     稳:'你不是慢热，是懂得把真心留给经得起日常的人。',
     暖:'你很会爱人，也看得见别人容易忽略的情绪细节。',
@@ -276,6 +309,14 @@ function calculate(){
     界:'你既能认真投入，也不会为了爱情弄丢自己。',
     直:'你不玩猜心游戏；喜欢就认真，失望也有原因。',
     智:'你要的不是有人陪聊，而是真正听得懂彼此。'
+  };
+  const secondPraise={
+    稳:'你也很在意对方能不能把喜欢落到行动里。',
+    暖:'但真正让你留下来的，是被认真理解和接住。',
+    趣:'同时，你需要这段关系一直保持生长和新鲜。',
+    界:'你也需要足够的空间，才能更自愿地靠近。',
+    直:'而清晰、诚实的回应，能让你停止反复猜测。',
+    智:'精神上的同频，决定了你的心动能走多深。'
   };
   const axisPraise={
     E:['你的热烈有感染力，但你要的是双向奔赴，不是一个人撑场。','你敢表达喜欢，也配得上同样明确的回应。'],
@@ -290,21 +331,21 @@ function calculate(){
   const axes=[selfMbti[0],selfMbti[1],selfMbti[2],selfMbti[3]],axis=axes[seed%4];
   const scoreLines=[
     `你不是要求多，只是「${needLabels[top]}」和「${needLabels[second]}」少一个都不行。`,
-    `你会心动，但不会随便把长期席位交出去。`,
-    `你最迷人的地方，是清醒地心动，也认真地选择。`
+    `真正让你留下来的，是「${needLabels[top]}」与「${needLabels[second]}」同时在线。`,
+    `你会心动，但只有兼顾「${needLabels[top]}」和「${needLabels[second]}」的人能走近你。`
   ];
   resultData={
     userName:$('#userNameInput').value.trim(),
     userAttr:`${selfMbti} × ${selfZodiac}`,
     targetType:`${mbti} × ${z}`,
     scoreNum:score,
-    archetype:p.name,
+    archetype,
     scoreLine:scoreLines[seed%scoreLines.length],
     needs,needLabels,
-    desc0:`${topPraise[top]}${axisPraise[axis][seed%2]}`,
-    desc1:`${proof||'你的选择'}暴露了真正标准：你要的不是“条件不错”，而是同时给你「${needLabels[top]}」和「${needLabels[second]}」的人。${mbti} × ${z}更容易踩中这两个点。`,
+    desc0:`${topPraise[top]}${secondPraise[second]}${axisPraise[axis][seed%2]}`,
+    desc1:`${proof||'你的选择'}暴露了真正标准：你要的不是一个标签，而是能同时给你「${needLabels[top]}」和「${needLabels[second]}」的人。${mbti} × ${z}更接近这组相处气质。`,
     desc2:`最容易踩的坑：${blind.replace(/[。]$/,'')}。`,
-    desc3:`别只看心动，看 TA 能否连续两周在「${needLabels[top]}」上有行动。${act}`
+    desc3:`别只看第一眼心动，连续观察 TA 是否既能回应你的「${needLabels[top]}」，也尊重你的「${needLabels[second]}」。${act}`
   };
   saveAndRender()
 }
